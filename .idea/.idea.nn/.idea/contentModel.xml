@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_nn.-370225221.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="ANN" t="Include">
+          <e p="Demo" t="Include">
+            <e p="Car2D" t="Include">
+              <e p="Car2DANN.cs" t="Include" />
+              <e p="Car2DCamera.cs" t="Include" />
+              <e p="Car2DControl.cs" t="Include" />
+              <e p="Car2DLearnANN.cs" t="Include" />
+              <e p="Car2DLearnPerceptron.cs" t="Include" />
+              <e p="Car2DPerceptron.cs" t="Include" />
+              <e p="CheckPoint.cs" t="Include" />
+              <e p="CheckPoints.cs" t="Include" />
+            </e>
+            <e p="SelfLearningCar" t="Include">
+              <e p="DemoCar.cs" t="Include" />
+              <e p="DemoCarNEAT.cs" t="Include" />
+              <e p="DemoCarNEATSelfLearnInterface.cs" t="Include" />
+              <e p="DemoCarPerceptron.cs" t="Include" />
+              <e p="DemoCarPerceptronSelfLearnInterface.cs" t="Include" />
+            </e>
+            <e p="Tennis" t="Include">
+              <e p="TennisANN.cs" t="Include" />
+              <e p="TennisANNLearning.cs" t="Include" />
+              <e p="TennisBall.cs" t="Include" />
+              <e p="TennisBot.cs" t="Include" />
+              <e p="TennisControl.cs" t="Include" />
+              <e p="TennisGate.cs" t="Include" />
+              <e p="TennisPerceptron.cs" t="Include" />
+              <e p="TennisPerceptronLearning.cs" t="Include" />
+            </e>
+            <e p="Tutorial" t="Include">
+              <e p="Lesson1CowLearning.cs" t="Include" />
+              <e p="Lesson2CowLearning.cs" t="Include" />
+              <e p="Lesson3CowLearning.cs" t="Include" />
+              <e p="Lesson3TutorialFood.cs" t="Include" />
+              <e p="Lesson4CowLearning.cs" t="Include" />
+              <e p="Lesson4TutorialCow.cs" t="Include" />
+              <e p="LessonTutorialCowPerceptron.cs" t="Include" />
+            </e>
+            <e p="XOR" t="Include">
+              <e p="DemoXORinterface.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="ANN" t="Include">
+              <e p="ANN.cs" t="Include" />
+              <e p="ANNConnection.cs" t="Include" />
+              <e p="ANNNode.cs" t="Include" />
+              <e p="Interface" t="Include">
+                <e p="ANNInterface.cs" t="Include" />
+                <e p="ANNLearnByNEATInterface.cs" t="Include" />
+                <e p="PerceptronBackPropagationInterface.cs" t="Include" />
+                <e p="PerceptronInterface.cs" t="Include" />
+                <e p="PerceptronRandomGenerationInterface.cs" t="Include" />
+              </e>
+              <e p="Learn" t="Include">
+                <e p="ANNLearnByNEAT.cs" t="Include" />
+                <e p="PerceptronLernByBackPropagation.cs" t="Include" />
+                <e p="PerceptronLernByRandomGeneration.cs" t="Include" />
+              </e>
+              <e p="Perceptron.cs" t="Include" />
+            </e>
+            <e p="GUI" t="Include">
+              <e p="DrawANNWeight.cs" t="Include" />
+              <e p="InterfaceGUI.cs" t="Include" />
+              <e p="InterfaceStyle.cs" t="Include" />
+            </e>
+            <e p="Math" t="Include">
+              <e p="ActivationFunctions.cs" t="Include" />
+              <e p="Formulas.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Tutorial" t="Include">
+            <e p="TutorialCowControl.cs" t="Include" />
+            <e p="TutorialFood.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Noedify" t="Include">
+          <e p="Demos" t="Include">
+            <e p="Background_Training_Digits" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="Noedify_example_runtimeTrain_Convolutional.cs" t="Include" />
+                <e p="Noedify_example_runtimeTrain_FullyConnected.cs" t="Include" />
+                <e p="TestPredictions_BackgroundTraining.cs" t="Include" />
+              </e>
+            </e>
+            <e p="HoppyGame" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="Hoppy_AnimationController.cs" t="Include" />
+                <e p="Hoppy_Brain.cs" t="Include" />
+                <e p="Hoppy_GroundControl.cs" t="Include" />
+                <e p="Hoppy_Obstacle_Controller.cs" t="Include" />
+                <e p="Hoppy_SimController.cs" t="Include" />
+              </e>
+            </e>
+            <e p="TensorflowImport_MNIST_Drawing" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="FollowPointer.cs" t="Include" />
+                <e p="MNISTpredictionPlot.cs" t="Include" />
+                <e p="MouseSketch.cs" t="Include" />
+                <e p="Noedify_DrawTest_Network.cs" t="Include" />
+                <e p="SampleDrawingMNIST.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Resources" t="Include">
+            <e p="Noedify" t="Include">
+              <e p="ModelParameterFiles" t="Include">
+                <e p="FC_mnist_600x300x140_parameters.txt" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="Noedify_Debugger.cs" t="Include" />
+            <e p="Noedify_Plot.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="FunctionGrapher.cs" t="Include" />
+          <e p="NetworkStructure.cs" t="Include" />
+          <e p="TestClass.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Temp/bin" t="ExcludeRecursive" />
+      <e p="nn.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
