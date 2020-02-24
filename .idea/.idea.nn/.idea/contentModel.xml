@@ -549,9 +549,17 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="BasicFunctions.cs" t="Include" />
+          <e p="CameraController.cs" t="Include" />
           <e p="FunctionGrapher.cs" t="Include" />
-          <e p="NetworkStructure.cs" t="Include" />
+          <e p="Layer.cs" t="Include" />
+          <e p="NetworkCalculator.cs" t="Include" />
+          <e p="NetworkDisplayer.cs" t="Include" />
+          <e p="NeuralNetwork.cs" t="Include" />
+          <e p="Node.cs" t="Include" />
           <e p="ObjectCopier.cs" t="Include" />
+          <e p="RandomnessHandler.cs" t="Include" />
+          <e p="SliderRandomizer.cs" t="Include" />
           <e p="TestClass.cs" t="Include" />
           <e p="Triangulator.cs" t="Include" />
         </e>

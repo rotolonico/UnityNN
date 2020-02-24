@@ -9,19 +9,24 @@ public class FunctionGrapher : MonoBehaviour
 {
     public static FunctionGrapher Instance;
 
-    public float thickness = 0.1f;
+    [SerializeField] private float thickness = 0.1f;
+    [SerializeField] private int pointsLimit = 500;
 
     [SerializeField] private Transform graphDot;
 
-    [SerializeField] private float graphSpacing = 1f;
-    [SerializeField] private float graphMin = -50;
-    [SerializeField] private float graphMax = 50;
+    [SerializeField] private float graphSpacingAbs = 0.2f;
+    [SerializeField] private float graphMinOffset = -5;
+    [SerializeField] private float graphMaxOffset = 5;
+
+    public float graphSpacing;
+    private float graphMin;
+    private float graphMax;
 
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
 
-    private void Awake()
+    private void Start()
     {
         Instance = this;
         meshFilter = GetComponent<MeshFilter>();
@@ -32,13 +37,25 @@ public class FunctionGrapher : MonoBehaviour
         GraphFunctionForY(y => 0, Color.green);
     }
 
+    private void CalculateMinMax()
+    {
+        var mainCamera = CameraController.Instance.thisCam;
+        var cameraPos = mainCamera.transform.position.x;
+        var cameraSize = mainCamera.orthographicSize;
+        graphMin = cameraPos + graphMinOffset * cameraSize;
+        graphMax = cameraPos + graphMaxOffset * cameraSize;
+        graphSpacing = cameraSize * graphSpacingAbs;
+    }
+
     public void GraphFunction(Func<float, float> action, Color color)
     {
+        CalculateMinMax();
         for (var x = graphMin; x < graphMax; x += graphSpacing) SpawnDot(new Vector2(x, action(x)), color);
     }
 
     public void GraphFunction2(Func<float, float> action, Color color)
     {
+        CalculateMinMax();
         var points = new List<Vector3>();
         for (var x = graphMin; x < graphMax; x += graphSpacing) points.Add(new Vector3(x, action(x)));
         DrawCurve(points.ToArray());
@@ -46,20 +63,28 @@ public class FunctionGrapher : MonoBehaviour
 
     public void Graph2DFunction(Func<KeyValuePair<float, float>, KeyValuePair<float, float>> action, Color color)
     {
+        CalculateMinMax();
+        foreach (var VARIABLE in GameObject.FindGameObjectsWithTag("Dots"))
+        {
+            Destroy(VARIABLE);
+        }
+        
         var points = new List<Vector3>();
         for (var y = graphMin; y < graphMax; y += graphSpacing)
         for (var x = graphMin; x < graphMax; x += graphSpacing)
         {
             var result = action(new KeyValuePair<float, float>(x, y));
             if (!float.IsNaN(result.Key) && !float.IsNaN(result.Value))
-                points.Add(new Vector3(result.Key, result.Value));
+                SpawnDot(new Vector2(result.Key, result.Value), color);
+                //points.Add(new Vector3(result.Key, result.Value));
         }
 
-        DrawCurve(points.ToArray());
+        //DrawCurve(points.ToArray());
     }
 
     public void GraphFunctionForY(Func<float, float> action, Color color)
     {
+        CalculateMinMax();
         for (var y = graphMin; y < graphMax; y += graphSpacing) SpawnDot(new Vector2(action(y), y), color);
     }
 
@@ -71,11 +96,14 @@ public class FunctionGrapher : MonoBehaviour
 
     private void DrawCurve(Vector3[] points)
     {
-        if (points.Length > 100)
+        if (points.Length < 2) return;
+        
+        if (points.Length > pointsLimit)
         {
             var newPoints = new List<Vector3>();
-            for (int i = 0; i < points.Length; i += points.Length / 100)
+            for (int i = 0; i < points.Length; i += points.Length / pointsLimit)
             {
+                if (float.IsNaN(points[i].y) || float.IsInfinity(points[i].y)) return;
                 newPoints.Add(points[i]);
             }
 
@@ -106,6 +134,7 @@ public class FunctionGrapher : MonoBehaviour
         {
             vertices2D[i] = new Vector2(thickPoints[i].x, thickPoints[i].y);
         }
+
 
         var tr = new Triangulator(vertices2D);
         var indices = tr.Triangulate();

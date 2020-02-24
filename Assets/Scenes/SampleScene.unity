@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3136586}
   - component: {fileID: 3136587}
+  - component: {fileID: 3136588}
   m_Layer: 5
   m_Name: Slider (9)
   m_TagString: Untagged
@@ -206,7 +207,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -221,6 +222,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3136588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9116319
 GameObject:
   m_ObjectHideFlags: 27
@@ -404,6 +417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 28836526}
   - component: {fileID: 28836527}
+  - component: {fileID: 28836528}
   m_Layer: 5
   m_Name: Slider (13)
   m_TagString: Untagged
@@ -430,7 +444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 560, y: -15}
+  m_AnchoredPosition: {x: 400, y: -15}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &28836527
@@ -479,7 +493,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -494,6 +508,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &28836528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28836525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &40263768
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,7 +873,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dcf2286fa9e25dad82c0118d832041f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputs: []
+  inputs:
+  - 0
+  - 0
+  test: 0
   slidersW:
   - {fileID: 1220865512}
   - {fileID: 1498526491}
@@ -879,11 +908,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e352a891d0399d6c8ddfb45d6efb093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thickness: 0.1
+  pointsLimit: 100
   graphDot: {fileID: 3218257625512120488, guid: ea0e85ce14d128626b93b8dd8c73f3aa,
     type: 3}
-  graphSpacing: 0.1
-  graphMin: -5
-  graphMax: 5
+  graphSpacingAbs: 0.1
+  graphMinOffset: -10
+  graphMaxOffset: 10
+  graphSpacing: 0
 --- !u!23 &48466349
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1744,6 +1776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 143794610}
   - component: {fileID: 143794611}
+  - component: {fileID: 143794612}
   m_Layer: 5
   m_Name: Slider (6)
   m_TagString: Untagged
@@ -1819,7 +1852,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1834,6 +1867,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &143794612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143794609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &163960225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2382,6 +2427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 288810902}
   - component: {fileID: 288810903}
+  - component: {fileID: 288810904}
   m_Layer: 5
   m_Name: Slider (10)
   m_TagString: Untagged
@@ -2457,7 +2503,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -2472,6 +2518,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &288810904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288810901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &305810702
 GameObject:
   m_ObjectHideFlags: 0
@@ -2952,6 +3010,7 @@ GameObject:
   m_Component:
   - component: {fileID: 330486911}
   - component: {fileID: 330486912}
+  - component: {fileID: 330486913}
   m_Layer: 5
   m_Name: Slider (2)
   m_TagString: Untagged
@@ -3027,7 +3086,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3042,6 +3101,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &330486913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330486910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &355903952
 GameObject:
   m_ObjectHideFlags: 0
@@ -3433,6 +3504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 365352974}
   - component: {fileID: 365352975}
+  - component: {fileID: 365352976}
   m_Layer: 5
   m_Name: Slider (4)
   m_TagString: Untagged
@@ -3508,7 +3580,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3523,6 +3595,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &365352976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365352973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &375316189
 GameObject:
   m_ObjectHideFlags: 0
@@ -4391,6 +4475,7 @@ GameObject:
   m_Component:
   - component: {fileID: 501527694}
   - component: {fileID: 501527695}
+  - component: {fileID: 501527696}
   m_Layer: 5
   m_Name: Slider (14)
   m_TagString: Untagged
@@ -4417,7 +4502,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 240, y: -15}
+  m_AnchoredPosition: {x: 560, y: -15}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &501527695
@@ -4466,7 +4551,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -4481,6 +4566,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &501527696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501527693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &504866525
 GameObject:
   m_ObjectHideFlags: 27
@@ -4707,6 +4804,7 @@ GameObject:
   m_Component:
   - component: {fileID: 618696162}
   - component: {fileID: 618696163}
+  - component: {fileID: 618696164}
   m_Layer: 5
   m_Name: Slider (7)
   m_TagString: Untagged
@@ -4782,7 +4880,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -4797,6 +4895,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &618696164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618696161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &624864838
 GameObject:
   m_ObjectHideFlags: 0
@@ -5972,6 +6082,7 @@ GameObject:
   m_Component:
   - component: {fileID: 703145576}
   - component: {fileID: 703145577}
+  - component: {fileID: 703145578}
   m_Layer: 5
   m_Name: Slider (8)
   m_TagString: Untagged
@@ -6047,7 +6158,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6062,6 +6173,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &703145578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703145575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &726332422
 GameObject:
   m_ObjectHideFlags: 0
@@ -6587,6 +6710,7 @@ GameObject:
   m_Component:
   - component: {fileID: 815322134}
   - component: {fileID: 815322135}
+  - component: {fileID: 815322136}
   m_Layer: 5
   m_Name: Slider (3)
   m_TagString: Untagged
@@ -6662,7 +6786,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -6677,6 +6801,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &815322136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815322133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &828691442
 GameObject:
   m_ObjectHideFlags: 27
@@ -7806,6 +7942,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7878,6 +8015,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ce727b538a84e042b78cc2c623c1eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 1
+  thisCam: {fileID: 963194227}
+  minOrthoSize: 1
+  maxOrthoSize: 10
 --- !u!1 &982738300
 GameObject:
   m_ObjectHideFlags: 0
@@ -9627,6 +9780,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1220865511}
   - component: {fileID: 1220865512}
+  - component: {fileID: 1220865513}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -9702,7 +9856,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -9717,6 +9871,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1220865513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220865510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1238345204
 GameObject:
   m_ObjectHideFlags: 0
@@ -10780,6 +10946,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1498526490}
   - component: {fileID: 1498526491}
+  - component: {fileID: 1498526492}
   m_Layer: 5
   m_Name: Slider (1)
   m_TagString: Untagged
@@ -10855,7 +11022,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -10870,6 +11037,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1498526492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498526489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1523286249
 GameObject:
   m_ObjectHideFlags: 0
@@ -10880,6 +11059,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1523286250}
   - component: {fileID: 1523286251}
+  - component: {fileID: 1523286252}
   m_Layer: 5
   m_Name: Slider (12)
   m_TagString: Untagged
@@ -10906,7 +11086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -15}
+  m_AnchoredPosition: {x: 240, y: -15}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1523286251
@@ -10955,7 +11135,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -10970,6 +11150,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1523286252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523286249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1539721039
 GameObject:
   m_ObjectHideFlags: 27
@@ -12129,6 +12321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1660549555}
   - component: {fileID: 1660549556}
+  - component: {fileID: 1660549557}
   m_Layer: 5
   m_Name: Slider (16)
   m_TagString: Untagged
@@ -12204,7 +12397,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -12219,6 +12412,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1660549557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660549554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1663584537
 GameObject:
   m_ObjectHideFlags: 27
@@ -12295,6 +12500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1691636480}
   - component: {fileID: 1691636481}
+  - component: {fileID: 1691636482}
   m_Layer: 5
   m_Name: Slider (15)
   m_TagString: Untagged
@@ -12370,7 +12576,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -12385,6 +12591,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1691636482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691636479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1696098592
 GameObject:
   m_ObjectHideFlags: 0
@@ -12791,6 +13009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1718819293}
   - component: {fileID: 1718819294}
+  - component: {fileID: 1718819295}
   m_Layer: 5
   m_Name: Slider (5)
   m_TagString: Untagged
@@ -12866,7 +13085,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -12881,6 +13100,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1718819295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718819292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1725875950
 GameObject:
   m_ObjectHideFlags: 0
@@ -12964,6 +13195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1730234061}
   - component: {fileID: 1730234062}
+  - component: {fileID: 1730234063}
   m_Layer: 5
   m_Name: Slider (11)
   m_TagString: Untagged
@@ -13039,7 +13271,7 @@ MonoBehaviour:
   m_MinValue: -1
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -13054,6 +13286,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1730234063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730234060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24f26ad838c5067eb7a5a8baba27e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1744397110
 GameObject:
   m_ObjectHideFlags: 0
