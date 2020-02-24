@@ -9,11 +9,11 @@ public class Node
     private bool isInput;
     private float inputValue;
 
-    public Node(bool IsInput = false)
+    public Node(bool isInput = false)
     {
         weights = new Dictionary<Node, float>();
         bias = RandomnessHandler.RandomMinusOneToOne();
-        this.isInput = IsInput;
+        this.isInput = isInput;
     }
 
     public Node(Node[] nodes, bool isInput = false)
@@ -34,7 +34,7 @@ public class Node
     public float CalculateValue()
     {
         if (isInput) return inputValue;
-        return BasicFunctions.HardSigmoid(weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias);
+        return BasicFunctions.Sigmoid(weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias);
     }
     
     public void SetInputValue(float newInputValue) => inputValue = newInputValue;

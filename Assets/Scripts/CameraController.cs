@@ -125,7 +125,7 @@ public class CameraController : MonoBehaviour
                 thisCam.transform.position = camPosition;
             }
             
-            TestClass.Instance.Test();
+            Main.Instance.GraphNetwork();
         }
 
         var wasScrolling = isScrolling;
@@ -152,7 +152,7 @@ public class CameraController : MonoBehaviour
             camPosition.z = -10f;
             thisCam.transform.position = camPosition;
             
-            TestClass.Instance.Test();
+            Main.Instance.GraphNetwork();
         }
 
         prevTouchCount = Input.touchCount;

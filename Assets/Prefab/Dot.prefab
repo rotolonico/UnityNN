@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3218257625512120489}
   m_Layer: 0
   m_Name: Dot
-  m_TagString: Dots
+  m_TagString: Dot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

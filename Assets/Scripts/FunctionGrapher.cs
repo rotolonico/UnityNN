@@ -9,6 +9,13 @@ public class FunctionGrapher : MonoBehaviour
 {
     public static FunctionGrapher Instance;
 
+    private enum DrawMode
+    {
+        Dot,
+        Mesh,
+        Line
+    }
+
     [SerializeField] private float thickness = 0.1f;
     [SerializeField] private int pointsLimit = 500;
 
@@ -18,86 +25,95 @@ public class FunctionGrapher : MonoBehaviour
     [SerializeField] private float graphMinOffset = -5;
     [SerializeField] private float graphMaxOffset = 5;
 
-    public float graphSpacing;
-    private float graphMin;
-    private float graphMax;
+    [SerializeField] private DrawMode drawMode = DrawMode.Dot;
 
+    private float graphSpacing;
+    private float graphMinX;
+    private float graphMaxX;
+    private float graphMinY;
+    private float graphMaxY;
+
+    private LineRenderer lineRenderer;
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
 
-    private void Start()
+    private void Awake()
     {
         Instance = this;
+
+        lineRenderer = GetComponent<LineRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         backMeshFilter = transform.GetChild(0).GetComponent<MeshFilter>();
-        //graphChartBase = GameObject.Find("GraphMultiple").GetComponent<GraphChartBase>();
-
-        GraphFunction(x => 0, Color.red);
-        GraphFunctionForY(y => 0, Color.green);
     }
 
     private void CalculateMinMax()
     {
         var mainCamera = CameraController.Instance.thisCam;
-        var cameraPos = mainCamera.transform.position.x;
+        var cameraPos = mainCamera.transform.position;
         var cameraSize = mainCamera.orthographicSize;
-        graphMin = cameraPos + graphMinOffset * cameraSize;
-        graphMax = cameraPos + graphMaxOffset * cameraSize;
+        graphMinX = cameraPos.x + graphMinOffset * cameraSize;
+        graphMaxX = cameraPos.x + graphMaxOffset * cameraSize;
+        graphMinY = cameraPos.y + graphMinOffset * cameraSize;
+        graphMaxY = cameraPos.y + graphMaxOffset * cameraSize;
         graphSpacing = cameraSize * graphSpacingAbs;
     }
 
     public void GraphFunction(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        for (var x = graphMin; x < graphMax; x += graphSpacing) SpawnDot(new Vector2(x, action(x)), color);
-    }
-
-    public void GraphFunction2(Func<float, float> action, Color color)
-    {
-        CalculateMinMax();
-        var points = new List<Vector3>();
-        for (var x = graphMin; x < graphMax; x += graphSpacing) points.Add(new Vector3(x, action(x)));
-        DrawCurve(points.ToArray());
-    }
-
-    public void Graph2DFunction(Func<KeyValuePair<float, float>, KeyValuePair<float, float>> action, Color color)
-    {
-        CalculateMinMax();
-        foreach (var VARIABLE in GameObject.FindGameObjectsWithTag("Dots"))
-        {
-            Destroy(VARIABLE);
-        }
-        
-        var points = new List<Vector3>();
-        for (var y = graphMin; y < graphMax; y += graphSpacing)
-        for (var x = graphMin; x < graphMax; x += graphSpacing)
-        {
-            var result = action(new KeyValuePair<float, float>(x, y));
-            if (!float.IsNaN(result.Key) && !float.IsNaN(result.Value))
-                SpawnDot(new Vector2(result.Key, result.Value), color);
-                //points.Add(new Vector3(result.Key, result.Value));
-        }
-
-        //DrawCurve(points.ToArray());
+        for (var x = graphMinX; x < graphMaxX; x += graphSpacing) DrawDot(new Vector2(x, action(x)), color);
     }
 
     public void GraphFunctionForY(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        for (var y = graphMin; y < graphMax; y += graphSpacing) SpawnDot(new Vector2(action(y), y), color);
+        for (var y = graphMinY; y < graphMaxY; y += graphSpacing) DrawDot(new Vector2(action(y), y), color);
     }
 
-    private void SpawnDot(Vector2 pos, Color color)
+    public void Graph2DFunction(Func<KeyValuePair<float, float>, KeyValuePair<float, float>> action, Color color)
+    {
+        CalculateMinMax();
+
+        var points = new List<Vector3>();
+        for (var y = graphMinY; y < graphMaxY; y += graphSpacing)
+        for (var x = graphMinX; x < graphMaxX; x += graphSpacing)
+        {
+            var result = action(new KeyValuePair<float, float>(x, y));
+            if (float.IsNaN(result.Key) || float.IsNaN(result.Value)) continue;
+            switch (drawMode)
+            {
+                case DrawMode.Dot:
+                    DrawDot(new Vector2(result.Key, result.Value), color);
+                    break;
+                case DrawMode.Mesh:
+                case DrawMode.Line:
+                    points.Add(new Vector3(result.Key, result.Value));
+                    break;
+            }
+        }
+
+        switch (drawMode)
+        {
+            case DrawMode.Mesh:
+                DrawMesh(points.ToArray());
+                break;
+            case DrawMode.Line:
+                DrawLine(points.ToArray());
+                break;
+        }
+    }
+
+    private void DrawDot(Vector2 pos, Color color)
     {
         var newDot = Instantiate(graphDot, pos, Quaternion.identity);
         newDot.GetComponent<SpriteRenderer>().color = color;
     }
 
-    private void DrawCurve(Vector3[] points)
+    private void DrawMesh(Vector3[] points)
     {
         if (points.Length < 2) return;
-        
+
         if (points.Length > pointsLimit)
         {
             var newPoints = new List<Vector3>();
@@ -144,16 +160,9 @@ public class FunctionGrapher : MonoBehaviour
         backMeshFilter.mesh = backMesh;
     }
 
-    public void DrawGraph(List<Vector2> points)
+    public void DrawLine(Vector3[] points)
     {
-        graphChartBase.DataSource.StartBatch();
-        graphChartBase.DataSource.ClearCategory("Player 1");
-        for (var i = 0; i < points.Count; i++)
-        {
-            var point = points[i];
-            graphChartBase.DataSource.AddPointToCategory("Player 1", point.x, point.y);
-        }
-
-        graphChartBase.DataSource.EndBatch();
+        lineRenderer.positionCount = points.Length;
+        lineRenderer.SetPositions(points);
     }
 }
