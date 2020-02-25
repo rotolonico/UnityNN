@@ -21,4 +21,37 @@ public static class NetworkCalculator
 
         return outputs;
     }
+
+    public static void TrainNetwork(NeuralNetwork network, float[] inputs, float[] desiredOutputs)
+    {
+        if (network.Structure[network.Structure.Length - 1] != desiredOutputs.Length)
+        {
+            Debug.Log("Expected " + network.Structure[network.Structure.Length - 1] + " outputs, got " + desiredOutputs.Length);
+            return;
+        }
+
+        var outputs = TestNetwork(network, inputs);
+        if (outputs == null) return;
+        
+        for (var i = 0; i < network.Layers[network.Layers.Length - 1].Nodes.Length; i++)
+            network.Layers[network.Layers.Length - 1].Nodes[i].SetDesiredValue(desiredOutputs[i]);
+
+        for (var i = network.Layers.Length - 1; i >= 1; i--)
+        {
+            foreach (var node in network.Layers[i].Nodes)
+            {
+                var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * 2 * node.CalculateCostDelta();
+                node.SmudgeBias(biasSmudge);
+
+                foreach (var connectedNode in node.GetConnectedNodes())
+                {
+                    var weightSmudge = connectedNode.Value * biasSmudge;
+                    var valueSmudge = node.GetWeight(connectedNode) * biasSmudge;
+                    
+                    node.SmudgeWeight(connectedNode, weightSmudge);
+                    connectedNode.SmudgeDesiredValue(valueSmudge);
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_NN.1831930274.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="ANN" t="Include">
+          <e p="Demo" t="Include">
+            <e p="Car2D" t="Include">
+              <e p="Car2DANN.cs" t="Include" />
+              <e p="Car2DCamera.cs" t="Include" />
+              <e p="Car2DControl.cs" t="Include" />
+              <e p="Car2DLearnANN.cs" t="Include" />
+              <e p="Car2DLearnPerceptron.cs" t="Include" />
+              <e p="Car2DPerceptron.cs" t="Include" />
+              <e p="CheckPoint.cs" t="Include" />
+              <e p="CheckPoints.cs" t="Include" />
+            </e>
+            <e p="SelfLearningCar" t="Include">
+              <e p="DemoCar.cs" t="Include" />
+              <e p="DemoCarNEAT.cs" t="Include" />
+              <e p="DemoCarNEATSelfLearnInterface.cs" t="Include" />
+              <e p="DemoCarPerceptron.cs" t="Include" />
+              <e p="DemoCarPerceptronSelfLearnInterface.cs" t="Include" />
+            </e>
+            <e p="Tennis" t="Include">
+              <e p="TennisANN.cs" t="Include" />
+              <e p="TennisANNLearning.cs" t="Include" />
+              <e p="TennisBall.cs" t="Include" />
+              <e p="TennisBot.cs" t="Include" />
+              <e p="TennisControl.cs" t="Include" />
+              <e p="TennisGate.cs" t="Include" />
+              <e p="TennisPerceptron.cs" t="Include" />
+              <e p="TennisPerceptronLearning.cs" t="Include" />
+            </e>
+            <e p="Tutorial" t="Include">
+              <e p="Lesson1CowLearning.cs" t="Include" />
+              <e p="Lesson2CowLearning.cs" t="Include" />
+              <e p="Lesson3CowLearning.cs" t="Include" />
+              <e p="Lesson3TutorialFood.cs" t="Include" />
+              <e p="Lesson4CowLearning.cs" t="Include" />
+              <e p="Lesson4TutorialCow.cs" t="Include" />
+              <e p="LessonTutorialCowPerceptron.cs" t="Include" />
+            </e>
+            <e p="XOR" t="Include">
+              <e p="DemoXORinterface.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="ANN" t="Include">
+              <e p="ANN.cs" t="Include" />
+              <e p="ANNConnection.cs" t="Include" />
+              <e p="ANNNode.cs" t="Include" />
+              <e p="Interface" t="Include">
+                <e p="ANNInterface.cs" t="Include" />
+                <e p="ANNLearnByNEATInterface.cs" t="Include" />
+                <e p="PerceptronBackPropagationInterface.cs" t="Include" />
+                <e p="PerceptronInterface.cs" t="Include" />
+                <e p="PerceptronRandomGenerationInterface.cs" t="Include" />
+              </e>
+              <e p="Learn" t="Include">
+                <e p="ANNLearnByNEAT.cs" t="Include" />
+                <e p="PerceptronLernByBackPropagation.cs" t="Include" />
+                <e p="PerceptronLernByRandomGeneration.cs" t="Include" />
+              </e>
+              <e p="Perceptron.cs" t="Include" />
+            </e>
+            <e p="GUI" t="Include">
+              <e p="DrawANNWeight.cs" t="Include" />
+              <e p="InterfaceGUI.cs" t="Include" />
+              <e p="InterfaceStyle.cs" t="Include" />
+            </e>
+            <e p="Math" t="Include">
+              <e p="ActivationFunctions.cs" t="Include" />
+              <e p="Formulas.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Tutorial" t="Include">
+            <e p="TutorialCowControl.cs" t="Include" />
+            <e p="TutorialFood.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Chart And Graph" t="Include">
+          <e p="3rd party notices.txt" t="Include" />
+          <e p="ChartParser" t="Include">
+            <e p="ChartParser.cs" t="Include" />
+            <e p="JsonParser.cs" t="Include" />
+            <e p="XMLParser.cs" t="Include" />
+          </e>
+          <e p="Editor" t="Include">
+            <e p="AutoFloatInspector.cs" t="Include" />
+            <e p="AxisInspector.cs" t="Include" />
+            <e p="BarChartInspetor.cs" t="Include" />
+            <e p="CategoryDataEditor.cs" t="Include" />
+            <e p="CategoryLabelsInspector.cs" t="Include" />
+            <e p="ChartDataEditor.cs" t="Include" />
+            <e p="ChartEditorCommon.cs" t="Include" />
+            <e p="ChartOrientedSizeInspector.cs" t="Include" />
+            <e p="EditorMenu.Full.cs" t="Include" />
+            <e p="EditorMenu.cs" t="Include" />
+            <e p="GraphChartInspector.cs" t="Include" />
+            <e p="GraphDataFillerEditor.cs" t="Include" />
+            <e p="GroupLabelsInspector.cs" t="Include" />
+            <e p="ItemLabelsBaseEditor.cs" t="Include" />
+            <e p="ItemLabelsInspector.cs" t="Include" />
+            <e p="MaterialTilingInspector.cs" t="Include" />
+            <e p="PieChartInspector.cs" t="Include" />
+            <e p="Playmaker" t="Include">
+              <e p="GraphPointActionEditor.cs" t="Include" />
+            </e>
+            <e p="PrefabOverride.cs" t="Include" />
+            <e p="RadarChartInspector.cs" t="Include" />
+            <e p="RenameWindow.cs" t="Include" />
+          </e>
+          <e p="InBeta" t="Include">
+            <e p="Editor" t="Include">
+              <e p="CandleChartInspector.cs" t="Include" />
+              <e p="PyramidChartInspector.cs" t="Include" />
+            </e>
+            <e p="PyramidChart" t="Include">
+              <e p="IInternalPyramidData.cs" t="Include" />
+              <e p="IPyramidGenerator.cs" t="Include" />
+              <e p="PyramidAnimation.cs" t="Include" />
+              <e p="PyramidCanvasGenerator.cs" t="Include" />
+              <e p="PyramidChart.cs" t="Include" />
+              <e p="PyramidData.cs" t="Include" />
+              <e p="PyramidMesh.cs" t="Include" />
+            </e>
+            <e p="Script" t="Include">
+              <e p="Candle Chart" t="Include">
+                <e p="CandleChart.cs" t="Include" />
+                <e p="CandleChartData.cs" t="Include" />
+                <e p="CanvasCandle.cs" t="Include" />
+                <e p="CanvasCandleChart.cs" t="Include" />
+                <e p="CanvasCandleGraphic.cs" t="Include" />
+                <e p="ICandleCreator.cs" t="Include" />
+                <e p="IInternalCandleData.cs" t="Include" />
+                <e p="WorldSpaceCandle.cs" t="Include" />
+              </e>
+              <e p="InfoBox.Candle.cs" t="Include" />
+              <e p="Utils" t="Include">
+                <e p="HoverText.Extension.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Tutorials" t="Include">
+              <e p="Candle" t="Include">
+                <e p="CandleChartFeed.cs" t="Include" />
+              </e>
+              <e p="Pyramid" t="Include">
+                <e p="PyramidFeed.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Playmaker" t="Include">
+            <e p="AddBarCategoryAction.cs" t="Include" />
+            <e p="AddCategoriesFromTemplate" t="Include">
+              <e p="BarCategoryFromTemplate.cs" t="Include" />
+              <e p="GraphCategoryFromTemplate.cs" t="Include" />
+              <e p="PieCategoryFromTemplate.cs" t="Include" />
+            </e>
+            <e p="AddGraphCategory2D.cs" t="Include" />
+            <e p="AddGraphCategory3D.cs" t="Include" />
+            <e p="AddGroupAction.cs" t="Include" />
+            <e p="AddPieCategory2D.cs" t="Include" />
+            <e p="AddPieCategory3D.cs" t="Include" />
+            <e p="AddRadarCategory2D.cs" t="Include" />
+            <e p="AddRadarCategory3D.cs" t="Include" />
+            <e p="AppendGraphPointAction.cs" t="Include" />
+            <e p="CheckCategoryAction.cs" t="Include" />
+            <e p="CheckGroupAction.cs" t="Include" />
+            <e p="ClearGraphCategoryAction.cs" t="Include" />
+            <e p="RemoveCategoryAction.cs" t="Include" />
+            <e p="RemoveGroupAction.cs" t="Include" />
+            <e p="SetValueBarAction.cs" t="Include" />
+            <e p="SetValuePieAction.cs" t="Include" />
+            <e p="SetValueRadarAction.cs" t="Include" />
+          </e>
+          <e p="Script" t="Include">
+            <e p="AbstractChartData.cs" t="Include" />
+            <e p="AnyChart.cs" t="Include" />
+            <e p="Attributes" t="Include">
+              <e p="CanvasAttribute.cs" t="Include" />
+              <e p="ChartFillerEditorAttribute.cs" t="Include" />
+              <e p="NonCanvasAttribute.cs" t="Include" />
+              <e p="SimpleAttribute.cs" t="Include" />
+            </e>
+            <e p="Axis" t="Include">
+              <e p="AutoFloat.cs" t="Include" />
+              <e p="AxisBase.cs" t="Include" />
+              <e p="AxisFormat.cs" t="Include" />
+              <e p="AxisGenerator.Empty.cs" t="Include" />
+              <e p="AxisGenerator.cs" t="Include" />
+              <e p="CanvasAxisGenerator.cs" t="Include" />
+              <e p="ChartDivisionInfo.cs" t="Include" />
+              <e p="ChartMainDivisionInfo.cs" t="Include" />
+              <e p="ChartSubDivisionInfo.cs" t="Include" />
+              <e p="HorizontalAxis.cs" t="Include" />
+              <e p="IAxisGenerator.cs" t="Include" />
+              <e p="VerticalAxis.cs" t="Include" />
+            </e>
+            <e p="AxisChart.cs" t="Include" />
+            <e p="BarChart" t="Include">
+              <e p="BarChart.Extra.cs" t="Include" />
+              <e p="BarChart.cs" t="Include" />
+              <e p="BarContentFitter.cs" t="Include" />
+              <e p="BarData.cs" t="Include" />
+              <e p="BarGenerator.cs" t="Include" />
+              <e p="BarInfo.cs" t="Include" />
+              <e p="BarMaterialFit.cs" t="Include" />
+              <e p="BarMesh2D.cs" t="Include" />
+              <e p="BarMesh3D.cs" t="Include" />
+              <e p="BarMeshGenerator.cs" t="Include" />
+              <e p="CanvasBarChart.cs" t="Include" />
+              <e p="IBarGenerator.cs" t="Include" />
+              <e p="WorldSpaceBarChart.cs" t="Include" />
+            </e>
+            <e p="Canvas" t="Include">
+              <e p="CanvasLines.Bubble.cs" t="Include" />
+              <e p="CanvasLines.cs" t="Include" />
+              <e p="CanvasLinesHover.cs" t="Include" />
+              <e p="EventHandlingGraphic.cs" t="Include" />
+              <e p="SensitivityControl.cs" t="Include" />
+            </e>
+            <e p="ChartAdancedSettings.cs" t="Include" />
+            <e p="ChartCommon.cs" t="Include" />
+            <e p="ChartData" t="Include">
+              <e p="BaseScrollableCategoryData.cs" t="Include" />
+              <e p="BaseSlider.cs" t="Include" />
+              <e p="IChartData.cs" t="Include" />
+              <e p="ScrollableChartData.cs" t="Include" />
+            </e>
+            <e p="ChartDateUtility.cs" t="Include" />
+            <e p="ChartDivisionSide.cs" t="Include" />
+            <e p="ChartDynamicMaterial.cs" t="Include" />
+            <e p="ChartItem" t="Include">
+              <e p="CharItemEffectController.cs" t="Include" />
+              <e p="ChartItemEffect.cs" t="Include" />
+              <e p="ChartItemEvents.cs" t="Include" />
+              <e p="ChartItemGrowEffect.cs" t="Include" />
+              <e p="ChartItemLerpEffect.cs" t="Include" />
+              <e p="ChartItemMaterialLerpEffect.cs" t="Include" />
+              <e p="ChartItemTextBlend.cs" t="Include" />
+            </e>
+            <e p="ChartMargin.cs" t="Include" />
+            <e p="ChartMaterialController.cs" t="Include" />
+            <e p="ChartOrientation.cs" t="Include" />
+            <e p="ChartOrientedSize.cs" t="Include" />
+            <e p="Common" t="Include">
+              <e p="ChartItem.cs" t="Include" />
+              <e p="ChartItemIndex.cs" t="Include" />
+              <e p="ChartItemNoDelete.cs" t="Include" />
+              <e p="DoubleRect.cs" t="Include" />
+              <e p="DoubleVector2.cs" t="Include" />
+              <e p="DoubleVector3.cs" t="Include" />
+              <e p="DoubleVector4.cs" t="Include" />
+              <e p="GameObjectPool.cs" t="Include" />
+              <e p="ICanvas.cs" t="Include" />
+            </e>
+            <e p="CustomChartPointer.cs" t="Include" />
+            <e p="DataFillers" t="Include">
+              <e p="BarDataFiller.cs" t="Include" />
+              <e p="GraphDataFiller.cs" t="Include" />
+              <e p="PieDataFiller.cs" t="Include" />
+              <e p="RadarDataFiller.cs" t="Include" />
+            </e>
+            <e p="DataSource" t="Include">
+              <e p="ChartColumnCollection.cs" t="Include" />
+              <e p="ChartDataColumn.cs" t="Include" />
+              <e p="ChartDataItemBase.cs" t="Include" />
+              <e p="ChartDataRow.cs" t="Include" />
+              <e p="ChartDataSourceBase.cs" t="Include" />
+              <e p="ChartDataSourceBaseCollection.cs" t="Include" />
+              <e p="ChartRowCollection.cs" t="Include" />
+              <e p="ChartSparseDataSource.cs" t="Include" />
+              <e p="IDataItem.cs" t="Include" />
+            </e>
+            <e p="Exceptions" t="Include">
+              <e p="ChartDuplicateNameException.cs" t="Include" />
+              <e p="ChartException.cs" t="Include" />
+              <e p="ChartItemNotExistException.cs" t="Include" />
+            </e>
+            <e p="GraphChart" t="Include">
+              <e p="GraphChart.cs" t="Include" />
+              <e p="GraphChartBase.cs" t="Include" />
+              <e p="GraphData.3D.cs" t="Include" />
+              <e p="GraphData.Realtime.cs" t="Include" />
+              <e p="GraphData.cs" t="Include" />
+              <e p="WorldSpaceGraphChart.cs" t="Include" />
+            </e>
+            <e p="GraphFileManager.cs" t="Include" />
+            <e p="IInternalUse.cs" t="Include" />
+            <e p="InternalUseInterfaces" t="Include">
+              <e p="IInternalBarData.cs" t="Include" />
+              <e p="IInternalCandleData.cs" t="Include" />
+              <e p="IInternalGraphData.cs" t="Include" />
+              <e p="IInternalPieData.cs" t="Include" />
+              <e p="IInternalSettings.cs" t="Include" />
+              <e p="InternalItemEvents.cs" t="Include" />
+            </e>
+            <e p="Legened" t="Include">
+              <e p="CanvasLegend.cs" t="Include" />
+              <e p="CanvasLegendItem.cs" t="Include" />
+            </e>
+            <e p="LegenedInfo.cs" t="Include" />
+            <e p="MaterialTiling.cs" t="Include" />
+            <e p="Mesh" t="Include">
+              <e p="CanvasChartMesh.cs" t="Include" />
+              <e p="ChartMeshBase.cs" t="Include" />
+              <e p="IChartMesh.cs" t="Include" />
+              <e p="WorldSpaceChartMesh.cs" t="Include" />
+            </e>
+            <e p="MeshDimention.cs" t="Include" />
+            <e p="MixedSeriesChart" t="Include">
+              <e p="IMixedChartDelegate.cs" t="Include" />
+              <e p="IMixedSeriesProxy.cs" t="Include" />
+              <e p="MixedSeriesGenericValue.cs" t="Include" />
+            </e>
+            <e p="MonoBehaviours" t="Include">
+              <e p="ChartSettingItemBase.cs" t="Include" />
+            </e>
+            <e p="Path" t="Include">
+              <e p="BoxPathGenerator.Empty.cs" t="Include" />
+              <e p="BoxPathGenerator.cs" t="Include" />
+              <e p="CustomPathGenerator.Empty.cs" t="Include" />
+              <e p="CustomPathGenerator.cs" t="Include" />
+              <e p="CylinderPathGenerator.Empty.cs" t="Include" />
+              <e p="CylinderPathGenerator.cs" t="Include" />
+              <e p="FillPathGenerator.Empty.cs" t="Include" />
+              <e p="FillPathGenerator.cs" t="Include" />
+              <e p="LineRendererPathGenerator.Empty.cs" t="Include" />
+              <e p="LineRendererPathGenerator.cs" t="Include" />
+              <e p="PathGenerator.Empty.cs" t="Include" />
+              <e p="PathGenerator.cs" t="Include" />
+              <e p="PathMultiplier.Empty.cs" t="Include" />
+              <e p="PathMultiplier.cs" t="Include" />
+              <e p="SmoothPathGenerator.Empty.cs" t="Include" />
+              <e p="SmoothPathGenerator.cs" t="Include" />
+            </e>
+            <e p="PieChart" t="Include">
+              <e p="CanvasPieChart.cs" t="Include" />
+              <e p="IPieGenerator.cs" t="Include" />
+              <e p="PieCanvasGenerator.cs" t="Include" />
+              <e p="PieChart.cs" t="Include" />
+              <e p="PieData.cs" t="Include" />
+              <e p="PieInfo.cs" t="Include" />
+              <e p="PieMesh2D.cs" t="Include" />
+              <e p="PieMesh3D.cs" t="Include" />
+              <e p="WorldSpacePieChart.cs" t="Include" />
+              <e p="WorldSpacePieGenerator.cs" t="Include" />
+            </e>
+            <e p="RadarChart" t="Include">
+              <e p="CanvasRadarChart.cs" t="Include" />
+              <e p="IInternalRadarData.cs" t="Include" />
+              <e p="RadarChart.cs" t="Include" />
+              <e p="RadarChartData.3D.cs" t="Include" />
+              <e p="RadarChartData.cs" t="Include" />
+              <e p="RadarFill.cs" t="Include" />
+              <e p="RadarFillGenerator.cs" t="Include" />
+              <e p="WorldSpaceRadarChart.cs" t="Include" />
+            </e>
+            <e p="ScrollableAxisChart.cs" t="Include" />
+            <e p="SimpleJSON-master" t="Include">
+              <e p="SimpleJSON-master" t="Include">
+                <e p="SimpleJSON.cs" t="Include" />
+                <e p="SimpleJSONBinary.cs" t="Include" />
+                <e p="SimpleJSONUnity.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Text" t="Include">
+              <e p="AlignedItemLabels.cs" t="Include" />
+              <e p="BillboardText.cs" t="Include" />
+              <e p="CategoryLabels.cs" t="Include" />
+              <e p="ChartLabelAlignment.cs" t="Include" />
+              <e p="ChartText.cs" t="Include" />
+              <e p="GroupLabelAlignment.cs" t="Include" />
+              <e p="GroupLabels.cs" t="Include" />
+              <e p="ItemLabels.cs" t="Include" />
+              <e p="ItemLabelsBase.cs" t="Include" />
+              <e p="TextController.cs" t="Include" />
+              <e p="TextDirection.cs" t="Include" />
+              <e p="TextFormatting.cs" t="Include" />
+            </e>
+            <e p="Utils" t="Include">
+              <e p="Animation" t="Include">
+                <e p="BarAnimation.cs" t="Include" />
+                <e p="GraphAnimation.cs" t="Include" />
+                <e p="PieAnimation.cs" t="Include" />
+              </e>
+              <e p="AxisCoordinates.cs" t="Include" />
+              <e p="HoverText.cs" t="Include" />
+              <e p="InfoBox" t="Include">
+                <e p="InfoBox.cs" t="Include" />
+              </e>
+              <e p="Multiple Graph Demo" t="Include">
+                <e p="MultipleGraphDemo.cs" t="Include" />
+              </e>
+              <e p="Simple Graph Demo" t="Include">
+                <e p="SimpleGraphDemo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Shaders" t="Include">
+            <e p="GradientCanvas.shader" t="Include" />
+            <e p="GradientWorldSpace.shader" t="Include" />
+            <e p="GradientWorldSpaceOutline.shader" t="Include" />
+            <e p="SolidCanvasShader.shader" t="Include" />
+          </e>
+          <e p="Themes" t="Include">
+            <e p="2d" t="Include">
+              <e p="Radar" t="Include">
+                <e p="testMarker.cs" t="Include" />
+              </e>
+            </e>
+            <e p="3d" t="Include">
+              <e p="Pie" t="Include">
+                <e p="Theme 5" t="Include">
+                  <e p="Materials" t="Include">
+                    <e p="StandardCullOff.shader" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Common" t="Include">
+              <e p="Fonts" t="Include">
+                <e p="Charis-SIL" t="Include">
+                  <e p="SIL Open Font License.txt" t="Include" />
+                </e>
+                <e p="Exo2" t="Include">
+                  <e p="Scada - SIL Open Font License.txt" t="Include" />
+                </e>
+                <e p="bebas_neue" t="Include">
+                  <e p="About.txt" t="Include" />
+                  <e p="OFL-FAQ.txt" t="Include" />
+                  <e p="OFL.txt" t="Include" />
+                  <e p="Try_BebasNeuePro.txt" t="Include" />
+                </e>
+                <e p="comprehension" t="Include">
+                  <e p="SIL Open Font License.txt" t="Include" />
+                </e>
+                <e p="petit-formal-script" t="Include">
+                  <e p="OFL.txt" t="Include" />
+                </e>
+              </e>
+              <e p="Materials" t="Include">
+                <e p="bar-1" t="Include">
+                  <e p="StandardCullOff.shader" t="Include" />
+                </e>
+                <e p="bar-3" t="Include">
+                  <e p="StandardCullOff.shader" t="Include" />
+                </e>
+                <e p="pie-1" t="Include">
+                  <e p="StandardCullOff.shader" t="Include" />
+                </e>
+                <e p="pie-3d-3" t="Include">
+                  <e p="StandardCullOff.shader" t="Include" />
+                </e>
+              </e>
+              <e p="Meshes" t="Include">
+                <e p="cc0-license" t="Include">
+                  <e p="License.txt" t="Include" />
+                </e>
+              </e>
+            </e>
+            <e p="Demo" t="Include">
+              <e p="SelectScene.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Tutorials" t="Include">
+            <e p="Bar" t="Include">
+              <e p="BarChartFeed.cs" t="Include" />
+              <e p="BarRunChart.cs" t="Include" />
+              <e p="ChangeOrder.cs" t="Include" />
+            </e>
+            <e p="Bubble Graph" t="Include">
+              <e p="BubbleGraphFeed.cs" t="Include" />
+            </e>
+            <e p="Graph" t="Include">
+              <e p="GraphChartFeed.cs" t="Include" />
+            </e>
+            <e p="Large Data Graph" t="Include">
+              <e p="LargeDataFeed.Realtime.cs" t="Include" />
+              <e p="LargeDataFeed.cs" t="Include" />
+            </e>
+            <e p="Marker" t="Include">
+              <e p="Marker.cs" t="Include" />
+              <e p="MarkerSampleDataInitializer.cs" t="Include" />
+              <e p="MarkerText.cs" t="Include" />
+              <e p="MarkerTextLine.cs" t="Include" />
+              <e p="TrackerLine.cs" t="Include" />
+            </e>
+            <e p="Mixed Charts" t="Include">
+              <e p="MixedCharts.cs" t="Include" />
+            </e>
+            <e p="Pie" t="Include">
+              <e p="PieChartFeed.cs" t="Include" />
+            </e>
+            <e p="Radar" t="Include">
+              <e p="RadarChartFeed.cs" t="Include" />
+            </e>
+            <e p="Stream Graph" t="Include">
+              <e p="StreamingGraph.cs" t="Include" />
+            </e>
+            <e p="Zoom" t="Include">
+              <e p="GraphZoom.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Noedify" t="Include">
+          <e p="Demos" t="Include">
+            <e p="Background_Training_Digits" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="Noedify_example_runtimeTrain_Convolutional.cs" t="Include" />
+                <e p="Noedify_example_runtimeTrain_FullyConnected.cs" t="Include" />
+                <e p="TestPredictions_BackgroundTraining.cs" t="Include" />
+              </e>
+            </e>
+            <e p="HoppyGame" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="Hoppy_AnimationController.cs" t="Include" />
+                <e p="Hoppy_Brain.cs" t="Include" />
+                <e p="Hoppy_GroundControl.cs" t="Include" />
+                <e p="Hoppy_Obstacle_Controller.cs" t="Include" />
+                <e p="Hoppy_SimController.cs" t="Include" />
+              </e>
+            </e>
+            <e p="TensorflowImport_MNIST_Drawing" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="FollowPointer.cs" t="Include" />
+                <e p="MNISTpredictionPlot.cs" t="Include" />
+                <e p="MouseSketch.cs" t="Include" />
+                <e p="Noedify_DrawTest_Network.cs" t="Include" />
+                <e p="SampleDrawingMNIST.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Resources" t="Include">
+            <e p="Noedify" t="Include">
+              <e p="ModelParameterFiles" t="Include">
+                <e p="FC_mnist_600x300x140_parameters.txt" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="Noedify_Debugger.cs" t="Include" />
+            <e p="Noedify_Plot.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="BasicFunctions.cs" t="Include" />
+          <e p="CameraController.cs" t="Include" />
+          <e p="FlowerSpawner.cs" t="Include" />
+          <e p="FunctionGrapher.cs" t="Include" />
+          <e p="Layer.cs" t="Include" />
+          <e p="NetworkCalculator.cs" t="Include" />
+          <e p="NetworkDisplayer.cs" t="Include" />
+          <e p="NeuralNetwork.cs" t="Include" />
+          <e p="Node.cs" t="Include" />
+          <e p="ObjectCopier.cs" t="Include" />
+          <e p="RandomnessHandler.cs" t="Include" />
+          <e p="SliderRandomizer.cs" t="Include" />
+          <e p="Triangulator.cs" t="Include" />
+          <e p="UIHandler.cs" t="Include" />
+        </e>
+        <e p="TextMesh Pro" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="LiberationSans - OFL.txt" t="Include" />
+          </e>
+          <e p="Resources" t="Include">
+            <e p="LineBreaking Following Characters.txt" t="Include" />
+            <e p="LineBreaking Leading Characters.txt" t="Include" />
+            <e p="Shaders" t="Include">
+              <e p="TMP_Bitmap-Custom-Atlas.shader" t="Include" />
+              <e p="TMP_Bitmap-Mobile.shader" t="Include" />
+              <e p="TMP_Bitmap.shader" t="Include" />
+              <e p="TMP_SDF Overlay.shader" t="Include" />
+              <e p="TMP_SDF-Mobile Masking.shader" t="Include" />
+              <e p="TMP_SDF-Mobile Overlay.shader" t="Include" />
+              <e p="TMP_SDF-Mobile.shader" t="Include" />
+              <e p="TMP_SDF-Surface-Mobile.shader" t="Include" />
+              <e p="TMP_SDF-Surface.shader" t="Include" />
+              <e p="TMP_SDF.shader" t="Include" />
+              <e p="TMP_Sprite.shader" t="Include" />
+              <e p="TMPro.cginc" t="Include" />
+              <e p="TMPro_Properties.cginc" t="Include" />
+              <e p="TMPro_Surface.cginc" t="Include" />
+            </e>
+          </e>
+          <e p="Sprites" t="Include">
+            <e p="EmojiOne Attribution.txt" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="NN.sln" t="IncludeFlat" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

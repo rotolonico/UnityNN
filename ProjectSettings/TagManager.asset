@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Dot
   - Slider
+  - RedFlower
+  - BlueFlower
   layers:
   - Default
   - TransparentFX

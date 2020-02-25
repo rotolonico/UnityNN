@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class Node
 {
@@ -8,6 +9,9 @@ public class Node
 
     private bool isInput;
     private float inputValue;
+
+    public float Value { get; private set; }
+    private float desiredValue;
 
     public Node(bool isInput = false)
     {
@@ -33,15 +37,26 @@ public class Node
 
     public float CalculateValue()
     {
-        if (isInput) return inputValue;
-        return BasicFunctions.Sigmoid(weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias);
+        Value = isInput ? inputValue : BasicFunctions.Sigmoid(weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias);
+        return Value;
     }
     
     public void SetInputValue(float newInputValue) => inputValue = newInputValue;
     
+    public float GetWeight(Node node) => weights[node];
+    
     public void SetWeight(Node node, float weight) => weights[node] = weight;
     
+    public void SmudgeWeight(Node node, float weight) => weights[node] += weight;
+    
     public void SetBias(float newBias) => bias = newBias;
+    public void SmudgeBias(float newBias) => bias += newBias;
+
+    public void SetDesiredValue(float newDesiredValue) => desiredValue = newDesiredValue;
+    
+    public void SmudgeDesiredValue(float newDesiredValue) => desiredValue += newDesiredValue;
+
+    public float CalculateCostDelta() => desiredValue - Value;
 
     public Node[] GetConnectedNodes() => weights.Keys.ToArray();
 }
