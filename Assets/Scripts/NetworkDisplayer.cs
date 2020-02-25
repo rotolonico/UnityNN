@@ -12,10 +12,14 @@ public class NetworkDisplayer : MonoBehaviour
     public Transform sliderContainer;
     public Transform slider;
 
+    private readonly List<NetworkSlider> currentSliders = new List<NetworkSlider>();
+
     private void Awake() => Instance = this;
 
     public void DisplayNetwork(NeuralNetwork network)
     {
+        currentSliders.Clear();
+        
         var weightsCount = 0;
         var biasCount = 0;
         
@@ -36,16 +40,50 @@ public class NetworkDisplayer : MonoBehaviour
         }
     }
 
+    public void UpdateSliders()
+    {
+        foreach (var currentSlider in currentSliders)
+        {
+            var currentSliderComponent = currentSlider.GetComponentInChildren<Slider>();
+            
+            switch (currentSlider.type)
+            {
+                case NetworkSlider.SliderType.Weight:
+                    currentSliderComponent.SetValueWithoutNotify(currentSlider.referenceNode.GetWeight(currentSlider.weightNode));
+                    break;
+                case NetworkSlider.SliderType.Bias:
+                    currentSliderComponent.SetValueWithoutNotify(currentSlider.referenceNode.GetBias());
+                    break;
+            }
+        }
+    }
+
     private void InstantiateWeightSlider(string label, Node referenceNode, Node weightNode)
     {
         var newSlider = InstantiateSlider(label);
-        newSlider.GetComponentInChildren<Slider>().onValueChanged.AddListener(weight => referenceNode.SetWeight(weightNode, weight));
+        newSlider.GetComponentInChildren<Slider>().onValueChanged.AddListener(weight =>
+        {
+            referenceNode.SetWeight(weightNode, weight);
+            UIHandler.Instance.GraphNetwork();
+        });
+        
+        var newNetworkComponent = newSlider.GetComponent<NetworkSlider>();
+        newNetworkComponent.Initiate(NetworkSlider.SliderType.Weight, referenceNode, weightNode);
+        currentSliders.Add(newNetworkComponent);
     }
     
     private void InstantiateBiasSlider(string label, Node referenceNode)
     {
         var newSlider = InstantiateSlider(label);
-        newSlider.GetComponentInChildren<Slider>().onValueChanged.AddListener(referenceNode.SetBias);
+        newSlider.GetComponentInChildren<Slider>().onValueChanged.AddListener(f =>
+        {
+            referenceNode.SetBias(f);
+            UIHandler.Instance.GraphNetwork();
+        });
+        
+        var newNetworkComponent = newSlider.GetComponent<NetworkSlider>();
+        newNetworkComponent.Initiate(NetworkSlider.SliderType.Bias, referenceNode, null);
+        currentSliders.Add(newNetworkComponent);
     }
 
     private Transform InstantiateSlider(string label)

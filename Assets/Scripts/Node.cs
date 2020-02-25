@@ -49,6 +49,8 @@ public class Node
     
     public void SmudgeWeight(Node node, float weight) => weights[node] += weight;
     
+    public float GetBias() => bias;
+    
     public void SetBias(float newBias) => bias = newBias;
     public void SmudgeBias(float newBias) => bias += newBias;
 

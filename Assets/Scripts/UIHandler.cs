@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIHandler : MonoBehaviour
 
     public TMP_InputField networkStructureIF;
     public TMP_InputField trainingIterationsIF;
+    public Slider precisionSlider;
 
     private NeuralNetwork network;
 
@@ -80,7 +82,8 @@ public class UIHandler : MonoBehaviour
         for (var i = 0; i < iterations; i++)
         for (var j = 0; j < inputs.Count; j++)
             NetworkCalculator.TrainNetwork(network, inputs[j], outputs[j]);
-        
+
+        NetworkDisplayer.Instance.UpdateSliders();
         GraphNetwork();
     }
 
@@ -95,7 +98,7 @@ public class UIHandler : MonoBehaviour
             i =>
             {
                 var output = NetworkCalculator.TestNetwork(network, new[] {i.Key, i.Value});
-                return Math.Abs(output[0] - output[1]) > 0.01f
+                return Math.Abs(output[0] - output[1]) > precisionSlider.value
                     ? new KeyValuePair<float, float>(float.NaN, float.NaN)
                     : i;
             }, Color.magenta);

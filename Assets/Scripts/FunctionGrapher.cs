@@ -33,7 +33,7 @@ public class FunctionGrapher : MonoBehaviour
     private float graphMinY;
     private float graphMaxY;
 
-    private LineRenderer lineRenderer;
+    [SerializeField] private LineRenderer[] lineRenderer;
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
@@ -41,8 +41,7 @@ public class FunctionGrapher : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        lineRenderer = GetComponent<LineRenderer>();
+        
         meshFilter = GetComponent<MeshFilter>();
         backMeshFilter = transform.GetChild(0).GetComponent<MeshFilter>();
     }
@@ -62,13 +61,19 @@ public class FunctionGrapher : MonoBehaviour
     public void GraphFunction(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        for (var x = graphMinX; x < graphMaxX; x += graphSpacing) DrawDot(new Vector2(x, action(x)), color);
+        
+        var points = new List<Vector3>();
+        for (var x = graphMinX; x < graphMaxX; x += graphSpacing) points.Add(new Vector3(x, action(x)));
+        DrawLine(lineRenderer[1], points.ToArray());
     }
 
     public void GraphFunctionForY(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        for (var y = graphMinY; y < graphMaxY; y += graphSpacing) DrawDot(new Vector2(action(y), y), color);
+        
+        var points = new List<Vector3>();
+        for (var y = graphMinY; y < graphMaxY; y += graphSpacing) points.Add(new Vector3(action(y), y));
+        DrawLine(lineRenderer[2], points.ToArray());
     }
 
     public void Graph2DFunction(Func<KeyValuePair<float, float>, KeyValuePair<float, float>> action, Color color)
@@ -99,7 +104,7 @@ public class FunctionGrapher : MonoBehaviour
                 DrawMesh(points.ToArray());
                 break;
             case DrawMode.Line:
-                DrawLine(points.ToArray());
+                DrawLine(lineRenderer[0], points.ToArray());
                 break;
         }
     }
@@ -112,6 +117,8 @@ public class FunctionGrapher : MonoBehaviour
 
     private void DrawMesh(Vector3[] points)
     {
+        meshFilter.mesh = new Mesh();
+
         if (points.Length < 2) return;
 
         if (points.Length > pointsLimit)
@@ -160,9 +167,9 @@ public class FunctionGrapher : MonoBehaviour
         backMeshFilter.mesh = backMesh;
     }
 
-    public void DrawLine(Vector3[] points)
+    public void DrawLine(LineRenderer lr, Vector3[] points)
     {
-        lineRenderer.positionCount = points.Length;
-        lineRenderer.SetPositions(points);
+        lr.positionCount = points.Length;
+        lr.SetPositions(points);
     }
 }

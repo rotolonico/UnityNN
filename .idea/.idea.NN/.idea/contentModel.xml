@@ -556,6 +556,7 @@
           <e p="Layer.cs" t="Include" />
           <e p="NetworkCalculator.cs" t="Include" />
           <e p="NetworkDisplayer.cs" t="Include" />
+          <e p="NetworkSlider.cs" t="Include" />
           <e p="NeuralNetwork.cs" t="Include" />
           <e p="Node.cs" t="Include" />
           <e p="ObjectCopier.cs" t="Include" />
