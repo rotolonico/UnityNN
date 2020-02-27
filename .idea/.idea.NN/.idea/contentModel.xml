@@ -560,6 +560,7 @@
           <e p="NeuralNetwork.cs" t="Include" />
           <e p="Node.cs" t="Include" />
           <e p="ObjectCopier.cs" t="Include" />
+          <e p="Point.cs" t="Include" />
           <e p="RandomnessHandler.cs" t="Include" />
           <e p="SliderRandomizer.cs" t="Include" />
           <e p="Triangulator.cs" t="Include" />

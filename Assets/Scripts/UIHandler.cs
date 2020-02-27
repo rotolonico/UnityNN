@@ -98,9 +98,7 @@ public class UIHandler : MonoBehaviour
             i =>
             {
                 var output = NetworkCalculator.TestNetwork(network, new[] {i.Key, i.Value});
-                return Math.Abs(output[0] - output[1]) > precisionSlider.value
-                    ? new KeyValuePair<float, float>(float.NaN, float.NaN)
-                    : i;
+                return new Point(i.Key, i.Value, output[0] > output[1] ? 0 : 1);
             }, Color.magenta);
     }
 }

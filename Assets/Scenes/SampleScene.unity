@@ -195,7 +195,7 @@ MonoBehaviour:
   graphSpacingAbs: 0.1
   graphMinOffset: -5
   graphMaxOffset: 5
-  drawMode: 1
+  drawMode: 0
   lineRenderer:
   - {fileID: 48466352}
   - {fileID: 1462150321}

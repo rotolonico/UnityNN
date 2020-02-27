@@ -41,7 +41,7 @@ public class FunctionGrapher : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
+
         meshFilter = GetComponent<MeshFilter>();
         backMeshFilter = transform.GetChild(0).GetComponent<MeshFilter>();
     }
@@ -61,7 +61,7 @@ public class FunctionGrapher : MonoBehaviour
     public void GraphFunction(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        
+
         var points = new List<Vector3>();
         for (var x = graphMinX; x < graphMaxX; x += graphSpacing) points.Add(new Vector3(x, action(x)));
         DrawLine(lineRenderer[1], points.ToArray());
@@ -70,43 +70,58 @@ public class FunctionGrapher : MonoBehaviour
     public void GraphFunctionForY(Func<float, float> action, Color color)
     {
         CalculateMinMax();
-        
+
         var points = new List<Vector3>();
         for (var y = graphMinY; y < graphMaxY; y += graphSpacing) points.Add(new Vector3(action(y), y));
         DrawLine(lineRenderer[2], points.ToArray());
     }
 
-    public void Graph2DFunction(Func<KeyValuePair<float, float>, KeyValuePair<float, float>> action, Color color)
+    public void Graph2DFunction(Func<KeyValuePair<float, float>, Point> action, Color color)
     {
         CalculateMinMax();
 
-        var points = new List<Vector3>();
+        var points = new List<Point>();
         for (var y = graphMinY; y < graphMaxY; y += graphSpacing)
         for (var x = graphMinX; x < graphMaxX; x += graphSpacing)
         {
             var result = action(new KeyValuePair<float, float>(x, y));
-            if (float.IsNaN(result.Key) || float.IsNaN(result.Value)) continue;
-            switch (drawMode)
-            {
-                case DrawMode.Dot:
-                    DrawDot(new Vector2(result.Key, result.Value), color);
-                    break;
-                case DrawMode.Mesh:
-                case DrawMode.Line:
-                    points.Add(new Vector3(result.Key, result.Value));
-                    break;
-            }
+            points.Add(result);
         }
+
+        var edgePoints = GetEdgePoints(points);
 
         switch (drawMode)
         {
+            case DrawMode.Dot:
+                foreach (var point in edgePoints) DrawDot(point, color);
+                break;
             case DrawMode.Mesh:
-                DrawMesh(points.ToArray());
+                DrawMesh(edgePoints);
                 break;
             case DrawMode.Line:
-                DrawLine(lineRenderer[0], points.ToArray());
+                DrawLine(lineRenderer[0], edgePoints.ToArray());
                 break;
         }
+    }
+
+    private List<Vector3> GetEdgePoints(List<Point> points)
+    {
+        var edgePoints = new List<Vector3>();
+        var pointsPerRow = Mathf.FloorToInt((graphMaxX - graphMinX) / graphSpacing);
+
+        for (var i = 0; i < points.Count; i++)
+        {
+            if (points[i].Type != 0) continue;
+            if (i % pointsPerRow == 0 || i == 0 || (i - 1) % pointsPerRow == 0) continue;
+
+            if (points[i].Type != points[i - 1].Type ||
+                i < points.Count - 1 && points[i].Type != points[i + 1].Type ||
+                i > pointsPerRow - 1 && points[i].Type != points[i - pointsPerRow].Type ||
+                i < points.Count - pointsPerRow && points[i].Type != points[i + pointsPerRow].Type)
+                edgePoints.Add(new Vector3(points[i].X, points[i].Y));
+        }
+        
+        return edgePoints;
     }
 
     private void DrawDot(Vector2 pos, Color color)
@@ -115,35 +130,27 @@ public class FunctionGrapher : MonoBehaviour
         newDot.GetComponent<SpriteRenderer>().color = color;
     }
 
-    private void DrawMesh(Vector3[] points)
+    private void DrawMesh(List<Vector3> points)
     {
         meshFilter.mesh = new Mesh();
 
-        if (points.Length < 2) return;
+        if (points.Count < 2) return;
 
-        if (points.Length > pointsLimit)
+        if (points.Count > pointsLimit)
         {
             var newPoints = new List<Vector3>();
-            for (int i = 0; i < points.Length; i += points.Length / pointsLimit)
+            for (int i = 0; i < points.Count; i += points.Count / pointsLimit)
             {
                 if (float.IsNaN(points[i].y) || float.IsInfinity(points[i].y)) return;
                 newPoints.Add(points[i]);
             }
 
-            points = newPoints.ToArray();
+            points = newPoints;
         }
 
-        var test = new Vector3[]
-        {
-            new Vector3(0, 0),
-            new Vector3(1, 1),
-            new Vector3(2, 2),
-        };
-        //points = test;
+        var thickPoints = new Vector3[points.Count * 2];
 
-        var thickPoints = new Vector3[points.Length * 2];
-
-        for (var i = 0; i < points.Length; i++)
+        for (var i = 0; i < points.Count; i++)
         {
             var heading = i == 0 ? points[i + 1] - points[i] : points[i] - points[i - 1];
             var direction = heading / heading.magnitude;
