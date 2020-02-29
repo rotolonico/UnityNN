@@ -24,6 +24,8 @@ public static class NetworkCalculator
 
     public static void TrainNetwork(NeuralNetwork network, float[] inputs, float[] desiredOutputs)
     {
+        RandomnessHandler.Randomize(inputs);
+        
         if (network.Structure[network.Structure.Length - 1] != desiredOutputs.Length)
         {
             Debug.Log("Expected " + network.Structure[network.Structure.Length - 1] + " outputs, got " + desiredOutputs.Length);

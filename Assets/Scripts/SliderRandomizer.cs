@@ -13,6 +13,5 @@ public class SliderRandomizer : MonoBehaviour
     private IEnumerator Randomize()
     {
         yield return new WaitForSeconds(1);
-        
     }
 }

@@ -16,4 +16,7 @@ public class BasicFunctions : MonoBehaviour
     }
 
     public static float SigmoidDerivative(float x) => x * (1 - x);
+    
+    
+    
 }

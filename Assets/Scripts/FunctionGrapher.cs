@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ChartAndGraph;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FunctionGrapher : MonoBehaviour
 {
@@ -13,7 +15,8 @@ public class FunctionGrapher : MonoBehaviour
     {
         Dot,
         Mesh,
-        Line
+        Line,
+        Texture
     }
 
     [SerializeField] private float thickness = 0.1f;
@@ -34,6 +37,7 @@ public class FunctionGrapher : MonoBehaviour
     private float graphMaxY;
 
     [SerializeField] private LineRenderer[] lineRenderer;
+    [SerializeField] private SpriteRenderer textureSpriteRenderer;
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
@@ -88,18 +92,22 @@ public class FunctionGrapher : MonoBehaviour
             points.Add(result);
         }
 
-        var edgePoints = GetEdgePoints(points);
-
         switch (drawMode)
         {
             case DrawMode.Dot:
-                foreach (var point in edgePoints) DrawDot(point, color);
+                var dotPoints = GetEdgePoints(points);
+                foreach (var point in dotPoints) DrawDot(point, color);
                 break;
             case DrawMode.Mesh:
-                DrawMesh(edgePoints);
+                var meshPoints = GetEdgePoints(points);
+                DrawMesh(meshPoints);
                 break;
             case DrawMode.Line:
-                DrawLine(lineRenderer[0], edgePoints.ToArray());
+                var linePoints = GetEdgePoints(points);
+                DrawLine(lineRenderer[0], linePoints.ToArray());
+                break;
+            case DrawMode.Texture:
+                DrawTexture(points.Select(p => p.Type == 0 ? Color.red : Color.blue).ToArray());
                 break;
         }
     }
@@ -178,5 +186,18 @@ public class FunctionGrapher : MonoBehaviour
     {
         lr.positionCount = points.Length;
         lr.SetPositions(points);
+    }
+
+    public void DrawTexture(Color[] colors)
+    {
+        var texture = new Texture2D((int) Math.Sqrt(colors.Length), (int) Math.Sqrt(colors.Length));
+        texture.SetPixels(colors);
+        texture.filterMode = FilterMode.Trilinear;
+        texture.Apply();
+
+        var cameraSize = CameraController.Instance.thisCam.orthographicSize;
+        var sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1);
+        textureSpriteRenderer.sprite = sprite;
+        textureSpriteRenderer.transform.localScale = new Vector3(cameraSize / 10, cameraSize / 10);
     }
 }

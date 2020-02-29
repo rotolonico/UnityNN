@@ -11,6 +11,7 @@ public class Node
     private float inputValue;
 
     public float Value { get; private set; }
+    public float RawValue { get; private set; }
     private float desiredValue;
 
     public Node(bool isInput = false)
@@ -37,7 +38,8 @@ public class Node
 
     public float CalculateValue()
     {
-        Value = isInput ? inputValue : BasicFunctions.Sigmoid(weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias);
+        RawValue = isInput ? inputValue : weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias;
+        Value = isInput ? inputValue : BasicFunctions.Sigmoid(RawValue); 
         return Value;
     }
     

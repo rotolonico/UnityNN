@@ -91,9 +91,6 @@ public class UIHandler : MonoBehaviour
     {
         foreach (var dot in GameObject.FindGameObjectsWithTag("Dot")) Destroy(dot);
 
-        FunctionGrapher.Instance.GraphFunction(x => 0, Color.red);
-        FunctionGrapher.Instance.GraphFunctionForY(y => 0, Color.green);
-
         FunctionGrapher.Instance.Graph2DFunction(
             i =>
             {
