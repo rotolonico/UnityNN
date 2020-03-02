@@ -25,24 +25,32 @@ public class UIHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(0))
+        if (!Input.GetKey(KeyCode.LeftControl)) return;
+        
+        if (Input.GetMouseButtonDown(0))
         {
             var mousePosition = GetWorldMousePosition();
             FlowerSpawner.Instance.SpawnRedFlower(mousePosition);
         }
 
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
             var mousePosition = GetWorldMousePosition();
             FlowerSpawner.Instance.SpawnBlueFlower(mousePosition);
         }
 
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(2))
         {
             var mousePosition = GetWorldMousePosition();
             var output = NetworkCalculator.TestNetwork(network, new[] {mousePosition.x, mousePosition.y});
             Debug.Log(string.Join(" ", output));
             Debug.Log(output[0] >= output[1] ? "Red" : "Blue");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
+            foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
         }
     }
 
@@ -80,8 +88,7 @@ public class UIHandler : MonoBehaviour
 
         var iterations = int.Parse(trainingIterationsIF.text);
         for (var i = 0; i < iterations; i++)
-        for (var j = 0; j < inputs.Count; j++)
-            NetworkCalculator.TrainNetwork(network, inputs[j], outputs[j]);
+            NetworkCalculator.TrainNetwork(network, inputs, outputs);
 
         NetworkDisplayer.Instance.UpdateSliders();
         GraphNetwork();

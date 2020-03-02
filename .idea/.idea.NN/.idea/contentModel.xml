@@ -508,6 +508,9 @@
             </e>
           </e>
         </e>
+        <e p="Materials" t="Include">
+          <e p="Blur.shader" t="Include" />
+        </e>
         <e p="Noedify" t="Include">
           <e p="Demos" t="Include">
             <e p="Background_Training_Digits" t="Include">
@@ -562,7 +565,6 @@
           <e p="ObjectCopier.cs" t="Include" />
           <e p="Point.cs" t="Include" />
           <e p="RandomnessHandler.cs" t="Include" />
-          <e p="SliderRandomizer.cs" t="Include" />
           <e p="Triangulator.cs" t="Include" />
           <e p="UIHandler.cs" t="Include" />
         </e>

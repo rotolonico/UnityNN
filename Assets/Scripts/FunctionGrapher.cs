@@ -198,6 +198,6 @@ public class FunctionGrapher : MonoBehaviour
         var cameraSize = CameraController.Instance.thisCam.orthographicSize;
         var sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1);
         textureSpriteRenderer.sprite = sprite;
-        textureSpriteRenderer.transform.localScale = new Vector3(cameraSize / 10, cameraSize / 10);
+        textureSpriteRenderer.transform.localScale = new Vector3(cameraSize * graphSpacingAbs, cameraSize * graphSpacingAbs);
     }
 }

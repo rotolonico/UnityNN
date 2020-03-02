@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class NetworkCalculator
@@ -22,38 +23,58 @@ public static class NetworkCalculator
         return outputs;
     }
 
-    public static void TrainNetwork(NeuralNetwork network, float[] inputs, float[] desiredOutputs)
+    public static void TrainNetwork(NeuralNetwork network, List<float[]> inputs, List<float[]> desiredOutputs)
     {
-        RandomnessHandler.Randomize(inputs);
-        
-        if (network.Structure[network.Structure.Length - 1] != desiredOutputs.Length)
+        foreach (var desiredOutput in desiredOutputs.Where(desiredOutput => network.Structure[network.Structure.Length - 1] != desiredOutput.Length))
         {
-            Debug.Log("Expected " + network.Structure[network.Structure.Length - 1] + " outputs, got " + desiredOutputs.Length);
+            Debug.Log("Expected " + network.Structure[network.Structure.Length - 1] + " outputs, got " +
+                      desiredOutput.Length);
             return;
         }
-
-        var outputs = TestNetwork(network, inputs);
-        if (outputs == null) return;
         
-        for (var i = 0; i < network.Layers[network.Layers.Length - 1].Nodes.Length; i++)
-            network.Layers[network.Layers.Length - 1].Nodes[i].SetDesiredValue(desiredOutputs[i]);
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            TestNetwork(network, input);
+
+            for (var j = 0; j < network.Layers[network.Layers.Length - 1].Nodes.Length; j++)
+                network.Layers[network.Layers.Length - 1].Nodes[j].SetDesiredValue(desiredOutputs[i][j]);
+
+            for (var j = network.Layers.Length - 1; j >= 1; j--)
+            {
+                foreach (var node in network.Layers[j].Nodes)
+                {
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * 2 * node.CalculateCostDelta();
+                    node.TrainingBiasSmudge += biasSmudge;
+                    
+                    foreach (var connectedNode in node.GetConnectedNodes())
+                    {
+                        var weightSmudge = connectedNode.Value * biasSmudge;
+                        node.TrainingWeightsSmudge[connectedNode] += weightSmudge;
+                        
+                        var valueSmudge = node.GetWeight(connectedNode) * biasSmudge;
+                        connectedNode.SmudgeDesiredValue(valueSmudge);
+                    }
+                }
+            }
+        }
 
         for (var i = network.Layers.Length - 1; i >= 1; i--)
         {
             foreach (var node in network.Layers[i].Nodes)
             {
-                var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * 2 * node.CalculateCostDelta();
-                node.SmudgeBias(biasSmudge);
+                node.SmudgeBias(node.TrainingBiasSmudge);
+                node.TrainingBiasSmudge = 0;
 
                 foreach (var connectedNode in node.GetConnectedNodes())
                 {
-                    var weightSmudge = connectedNode.Value * biasSmudge;
-                    var valueSmudge = node.GetWeight(connectedNode) * biasSmudge;
-                    
-                    node.SmudgeWeight(connectedNode, weightSmudge);
-                    connectedNode.SmudgeDesiredValue(valueSmudge);
+                    node.SmudgeWeight(connectedNode, node.TrainingWeightsSmudge[connectedNode]);
+                    node.TrainingWeightsSmudge[connectedNode] = 0;
                 }
+                
+                node.SetDesiredValue(0);
             }
         }
+
     }
 }

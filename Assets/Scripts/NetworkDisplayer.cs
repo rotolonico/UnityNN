@@ -38,6 +38,8 @@ public class NetworkDisplayer : MonoBehaviour
                 InstantiateBiasSlider($"b{biasCount}", node);
             }
         }
+        
+        UpdateSliders();
     }
 
     public void UpdateSliders()
