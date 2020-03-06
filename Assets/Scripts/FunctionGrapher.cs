@@ -27,6 +27,7 @@ public class FunctionGrapher : MonoBehaviour
     [SerializeField] private float graphSpacingAbs = 0.2f;
     [SerializeField] private float graphMinOffset = -5;
     [SerializeField] private float graphMaxOffset = 5;
+    private int graphDetail = 1;
 
     [SerializeField] private DrawMode drawMode = DrawMode.Dot;
 
@@ -41,6 +42,9 @@ public class FunctionGrapher : MonoBehaviour
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
+    private Texture2D texture;
+
+    public Slider graphDetailSlider;
 
     private void Awake()
     {
@@ -48,7 +52,14 @@ public class FunctionGrapher : MonoBehaviour
 
         meshFilter = GetComponent<MeshFilter>();
         backMeshFilter = transform.GetChild(0).GetComponent<MeshFilter>();
+
+        texture = new Texture2D(0, 0)
+        {
+            filterMode = FilterMode.Trilinear
+        };
     }
+
+    public void UpdateDetail() => graphDetail = (int) graphDetailSlider.value;
 
     private void CalculateMinMax()
     {
@@ -84,52 +95,84 @@ public class FunctionGrapher : MonoBehaviour
     {
         CalculateMinMax();
 
-        var points = new List<Point>();
-        for (var y = graphMinY; y < graphMaxY; y += graphSpacing)
-        for (var x = graphMinX; x < graphMaxX; x += graphSpacing)
+        var test = new List<Point>();
+        var chunks = new List<Chunk>();
+        for (var y = graphMinY; y < graphMaxY - graphSpacing / 2; y += graphSpacing)
+        for (var x = graphMinX; x < graphMaxX - graphSpacing / 2; x += graphSpacing)
         {
             var result = action(new KeyValuePair<float, float>(x, y));
-            points.Add(result);
+            chunks.Add(new Chunk(result, graphDetail));
+            test.Add(result);
         }
+
+        var edgeIndexes = GetEdgeChunksIndexes(chunks);
+        foreach (var edgeIndex in edgeIndexes)
+        {
+            var chunk = chunks[edgeIndex];
+            for (var y = 0; y < chunk.Size; y++)
+            for (var x = 0; x < chunk.Size; x++)
+            {
+                var result = action(new KeyValuePair<float, float>(
+                    chunk.Points[y * graphDetail + x].X + x * graphSpacing / graphDetail - graphSpacing / graphDetail,
+                    chunk.Points[y * graphDetail + x].Y + y * graphSpacing / graphDetail - graphSpacing / graphDetail));
+                chunk.Points[y * graphDetail + x] = result;
+            }
+        }
+
+        var points = new Point[(int) Math.Sqrt(chunks.Count) * graphDetail, (int) Math.Sqrt(chunks.Count) * graphDetail];
+        for (var c = 0; c < chunks.Count; c++)
+        {
+            var chunk = chunks[c];
+            for (var p = 0; p < chunk.Points.Length; p++)
+            {
+                var x = chunk.Size * (int) Mathf.Floor(c / (float) Math.Sqrt(chunks.Count)) +
+                        (int) Mathf.Floor((float) p / chunk.Size);
+                var y = chunk.Size * (c % (int) Math.Sqrt(chunks.Count)) + p % chunk.Size;
+                var point = chunk.Points[p];
+                points[x,y] = point;
+            }
+        }
+
+        var pointsList = points.Cast<Point>().ToList();
+
 
         switch (drawMode)
         {
             case DrawMode.Dot:
-                var dotPoints = GetEdgePoints(points);
-                foreach (var point in dotPoints) DrawDot(point, color);
+                var dotPoints = GetEdgeChunksIndexes(chunks);
+                foreach (var point in dotPoints.Select(p => new Vector2(chunks[p].Points[0].X, chunks[p].Points[0].Y))) DrawDot(point, color);
                 break;
-            case DrawMode.Mesh:
-                var meshPoints = GetEdgePoints(points);
+            /*case DrawMode.Mesh:
+                var meshPoints = GetEdgeChunksIndexes(chunks);
                 DrawMesh(meshPoints);
                 break;
             case DrawMode.Line:
-                var linePoints = GetEdgePoints(points);
+                var linePoints = GetEdgeChunksIndexes(chunks);
                 DrawLine(lineRenderer[0], linePoints.ToArray());
-                break;
+                break;*/
             case DrawMode.Texture:
-                DrawTexture(points.Select(p => p.Type == 0 ? Color.red : Color.blue).ToArray());
+                DrawTexture(pointsList.Select(p => p.Color).ToArray());
                 break;
         }
     }
 
-    private List<Vector3> GetEdgePoints(List<Point> points)
+    private List<int> GetEdgeChunksIndexes(List<Chunk> points)
     {
-        var edgePoints = new List<Vector3>();
+        var edgeIndexes = new List<int>();
         var pointsPerRow = Mathf.FloorToInt((graphMaxX - graphMinX) / graphSpacing);
 
         for (var i = 0; i < points.Count; i++)
         {
-            if (points[i].Type != 0) continue;
             if (i % pointsPerRow == 0 || i == 0 || (i - 1) % pointsPerRow == 0) continue;
 
-            if (points[i].Type != points[i - 1].Type ||
-                i < points.Count - 1 && points[i].Type != points[i + 1].Type ||
-                i > pointsPerRow - 1 && points[i].Type != points[i - pointsPerRow].Type ||
-                i < points.Count - pointsPerRow && points[i].Type != points[i + pointsPerRow].Type)
-                edgePoints.Add(new Vector3(points[i].X, points[i].Y));
+            if (points[i].Points[0].Type != points[i - 1].Points[0].Type ||
+                i < points.Count - 1 && points[i].Points[0].Type != points[i + 1].Points[0].Type ||
+                i > pointsPerRow - 1 && points[i].Points[0].Type != points[i - pointsPerRow].Points[0].Type ||
+                i < points.Count - pointsPerRow && points[i].Points[0].Type != points[i + pointsPerRow].Points[0].Type)
+                edgeIndexes.Add(i);
         }
-        
-        return edgePoints;
+
+        return edgeIndexes;
     }
 
     private void DrawDot(Vector2 pos, Color color)
@@ -190,14 +233,15 @@ public class FunctionGrapher : MonoBehaviour
 
     public void DrawTexture(Color[] colors)
     {
-        var texture = new Texture2D((int) Math.Sqrt(colors.Length), (int) Math.Sqrt(colors.Length));
+        texture.Resize((int) Math.Sqrt(colors.Length), (int) Math.Sqrt(colors.Length));
         texture.SetPixels(colors);
-        texture.filterMode = FilterMode.Trilinear;
         texture.Apply();
 
         var cameraSize = CameraController.Instance.thisCam.orthographicSize;
-        var sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1);
-        textureSpriteRenderer.sprite = sprite;
-        textureSpriteRenderer.transform.localScale = new Vector3(cameraSize * graphSpacingAbs, cameraSize * graphSpacingAbs);
+
+        textureSpriteRenderer.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f), 1);
+        textureSpriteRenderer.transform.localScale =
+            new Vector3(cameraSize * graphSpacingAbs / graphDetail, cameraSize * graphSpacingAbs / graphDetail);
     }
 }
