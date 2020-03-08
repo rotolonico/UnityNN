@@ -24,10 +24,10 @@ public class FunctionGrapher : MonoBehaviour
 
     [SerializeField] private Transform graphDot;
 
-    [SerializeField] private float graphSpacingAbs = 0.2f;
     [SerializeField] private float graphMinOffset = -5;
     [SerializeField] private float graphMaxOffset = 5;
     private int graphDetail = 1;
+    private float graphSpacingAbs = 0.05f;
 
     [SerializeField] private DrawMode drawMode = DrawMode.Dot;
 
@@ -45,6 +45,8 @@ public class FunctionGrapher : MonoBehaviour
     private Texture2D texture;
 
     public Slider graphDetailSlider;
+    public Slider graphSpacingSlider;
+    public Toggle dynamicColors;
 
     private void Awake()
     {
@@ -60,6 +62,8 @@ public class FunctionGrapher : MonoBehaviour
     }
 
     public void UpdateDetail() => graphDetail = (int) graphDetailSlider.value;
+
+    public void UpdateSpacing() => graphSpacingAbs = (int) graphSpacingSlider.value;
 
     private void CalculateMinMax()
     {
@@ -94,21 +98,18 @@ public class FunctionGrapher : MonoBehaviour
     public void Graph2DFunction(Func<KeyValuePair<float, float>, Point> action, Color color)
     {
         CalculateMinMax();
-
-        var test = new List<Point>();
+        
         var chunks = new List<Chunk>();
         for (var y = graphMinY; y < graphMaxY - graphSpacing / 2; y += graphSpacing)
         for (var x = graphMinX; x < graphMaxX - graphSpacing / 2; x += graphSpacing)
         {
             var result = action(new KeyValuePair<float, float>(x, y));
             chunks.Add(new Chunk(result, graphDetail));
-            test.Add(result);
         }
 
         var edgeIndexes = GetEdgeChunksIndexes(chunks);
-        foreach (var edgeIndex in edgeIndexes)
+        foreach (var chunk in edgeIndexes.Select(edgeIndex => chunks[edgeIndex]))
         {
-            var chunk = chunks[edgeIndex];
             for (var y = 0; y < chunk.Size; y++)
             for (var x = 0; x < chunk.Size; x++)
             {
@@ -119,7 +120,8 @@ public class FunctionGrapher : MonoBehaviour
             }
         }
 
-        var points = new Point[(int) Math.Sqrt(chunks.Count) * graphDetail, (int) Math.Sqrt(chunks.Count) * graphDetail];
+        var points = new Point[(int) Math.Sqrt(chunks.Count) * graphDetail,
+            (int) Math.Sqrt(chunks.Count) * graphDetail];
         for (var c = 0; c < chunks.Count; c++)
         {
             var chunk = chunks[c];
@@ -129,7 +131,7 @@ public class FunctionGrapher : MonoBehaviour
                         (int) Mathf.Floor((float) p / chunk.Size);
                 var y = chunk.Size * (c % (int) Math.Sqrt(chunks.Count)) + p % chunk.Size;
                 var point = chunk.Points[p];
-                points[x,y] = point;
+                points[x, y] = point;
             }
         }
 
@@ -140,7 +142,8 @@ public class FunctionGrapher : MonoBehaviour
         {
             case DrawMode.Dot:
                 var dotPoints = GetEdgeChunksIndexes(chunks);
-                foreach (var point in dotPoints.Select(p => new Vector2(chunks[p].Points[0].X, chunks[p].Points[0].Y))) DrawDot(point, color);
+                foreach (var point in dotPoints.Select(p => new Vector2(chunks[p].Points[0].X, chunks[p].Points[0].Y)))
+                    DrawDot(point, color);
                 break;
             /*case DrawMode.Mesh:
                 var meshPoints = GetEdgeChunksIndexes(chunks);
@@ -151,7 +154,7 @@ public class FunctionGrapher : MonoBehaviour
                 DrawLine(lineRenderer[0], linePoints.ToArray());
                 break;*/
             case DrawMode.Texture:
-                DrawTexture(pointsList.Select(p => p.Color).ToArray());
+                DrawTexture(pointsList.Select(p => dynamicColors.isOn ? p.Color : p.Type == 1 ? Color.blue : Color.red).ToArray());
                 break;
         }
     }
