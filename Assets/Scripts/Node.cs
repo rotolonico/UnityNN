@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -72,7 +73,7 @@ public class Node
 
     public void SmudgeDesiredValue(float newDesiredValue) => desiredValue += newDesiredValue;
 
-    public float CalculateCostDelta() => desiredValue - Value;
+    public float CalculateCostDelta() => Mathf.Pow(desiredValue - Value, 3);
 
     public Node[] GetConnectedNodes() => weights.Keys.ToArray();
 }

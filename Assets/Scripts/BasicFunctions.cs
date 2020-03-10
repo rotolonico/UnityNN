@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BasicFunctions : MonoBehaviour
 {
-    public static float Sigmoid(float x) => 1f / (1f + Mathf.Pow((float) Math.E, -x));
+    public static float Sigmoid(float x) => 1f / (1f + (float) Math.Exp(-x));
 
     public static float HardSigmoid(float x)
     {

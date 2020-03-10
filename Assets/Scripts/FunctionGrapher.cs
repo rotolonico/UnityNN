@@ -46,6 +46,7 @@ public class FunctionGrapher : MonoBehaviour
 
     public Slider graphDetailSlider;
     public Slider graphSpacingSlider;
+    public Slider weightDecaySlider;
     public Toggle dynamicColors;
 
     private void Awake()
@@ -63,7 +64,9 @@ public class FunctionGrapher : MonoBehaviour
 
     public void UpdateDetail() => graphDetail = (int) graphDetailSlider.value;
 
-    public void UpdateSpacing() => graphSpacingAbs = (int) graphSpacingSlider.value;
+    public void UpdateSpacing() => graphSpacingAbs = graphSpacingSlider.value;
+
+    public void UpdateWeightDecay() => NetworkCalculator.weightDecay = weightDecaySlider.value;
 
     private void CalculateMinMax()
     {
@@ -166,13 +169,22 @@ public class FunctionGrapher : MonoBehaviour
 
         for (var i = 0; i < points.Count; i++)
         {
-            if (i % pointsPerRow == 0 || i == 0 || (i - 1) % pointsPerRow == 0) continue;
+            //if (i % pointsPerRow == 0 || i == 0 || (i - 1) % pointsPerRow == 0) continue;
 
-            if (points[i].Points[0].Type != points[i - 1].Points[0].Type ||
-                i < points.Count - 1 && points[i].Points[0].Type != points[i + 1].Points[0].Type ||
-                i > pointsPerRow - 1 && points[i].Points[0].Type != points[i - pointsPerRow].Points[0].Type ||
-                i < points.Count - pointsPerRow && points[i].Points[0].Type != points[i + pointsPerRow].Points[0].Type)
-                edgeIndexes.Add(i);
+            var left = i != 0 && points[i].Points[0].Type != points[i - 1].Points[0].Type;
+            var right = i < points.Count - 1 && points[i].Points[0].Type != points[i + 1].Points[0].Type;
+            var up = i > pointsPerRow - 1 && points[i].Points[0].Type != points[i - pointsPerRow].Points[0].Type;
+            var down = i < points.Count - pointsPerRow &&
+                       points[i].Points[0].Type != points[i + pointsPerRow].Points[0].Type;
+
+            if (!left && !right && !up && !down) continue;
+            
+            if (!edgeIndexes.Contains(i)) edgeIndexes.Add(i);
+            if (left && !edgeIndexes.Contains(i - 1)) edgeIndexes.Add(i - 1);
+            if (right && !edgeIndexes.Contains(i + 1)) edgeIndexes.Add(i + 1);
+            if (up && !edgeIndexes.Contains(i - pointsPerRow)) edgeIndexes.Add(i - pointsPerRow);
+            if (down && !edgeIndexes.Contains(i + pointsPerRow)) edgeIndexes.Add(i + pointsPerRow);
+
         }
 
         return edgeIndexes;
