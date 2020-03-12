@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
@@ -10,21 +11,42 @@ public class UIHandler : MonoBehaviour
 
     public TMP_InputField networkStructureIF;
     public TMP_InputField trainingIterationsIF;
+    public Slider graphDetailSlider;
+    public Slider graphSpacingSlider;
+    public Slider weightDecaySlider;
+    public Slider momentumSlider;
+    public Toggle dynamicColors;
+    public Toggle constantLearning;
+    public Toggle useANNLibrary;
 
     private NeuralNetwork network;
+
+    private Perceptron perceptron = new Perceptron();
+    private PerceptronLernByBackPropagation PLBBP = new PerceptronLernByBackPropagation();
 
     private void Start()
     {
         Instance = this;
-        network = new NeuralNetwork(2, new[] {3}, 2);
+        if (!useANNLibrary.isOn) network = new NeuralNetwork(2, new[] {3}, 2);
+        else perceptron.CreatePerceptron(2, new[] {3}, 2);
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
     }
 
+    public void UpdateDetail() => FunctionGrapher.Instance.graphDetail = (int) graphDetailSlider.value;
+
+    public void UpdateSpacing() => FunctionGrapher.Instance.graphSpacingAbs = graphSpacingSlider.value;
+
+    public void UpdateWeightDecay() => NetworkCalculator.weightDecay = weightDecaySlider.value;
+
+    public void UpdateMomentum() => NetworkCalculator.momentum = momentumSlider.value;
+
     private void Update()
     {
+        if (constantLearning.isOn) TrainNetwork();
+
         if (!Input.GetKey(KeyCode.LeftControl)) return;
-        
+
         if (Input.GetMouseButtonDown(0))
         {
             var mousePosition = GetWorldMousePosition();
@@ -40,11 +62,15 @@ public class UIHandler : MonoBehaviour
         if (Input.GetMouseButtonDown(2))
         {
             var mousePosition = GetWorldMousePosition();
-            var output = NetworkCalculator.TestNetwork(network, new[] {mousePosition.x, mousePosition.y});
-            Debug.Log(string.Join(" ", output));
+
+            var inputs = (new[] {mousePosition.x, mousePosition.y});
+            var output = TestNetwork(inputs);
+
+            Debug.Log(
+                $"INPUTS: {inputs[0]} {inputs[1]} OUTPUTS: {string.Join(" ", output)} {(output[0] >= output[1] ? "Red" : "Blue")}");
             Debug.Log(output[0] >= output[1] ? "Red" : "Blue");
         }
-        
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
@@ -66,9 +92,26 @@ public class UIHandler : MonoBehaviour
         for (var i = 0; i < splitStructure.Length; i++)
             networkStructure[i] = int.Parse(splitStructure[i]);
 
-        network = new NeuralNetwork(2, networkStructure, 2);
+        if (!useANNLibrary.isOn) network = new NeuralNetwork(2, networkStructure, 2);
+        else perceptron.CreatePerceptron(2, networkStructure, 2);
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
+    }
+
+    private float[] TestNetwork(float[] inputs)
+    {
+        if (!useANNLibrary.isOn)
+            return NetworkCalculator.TestNetwork(network, inputs);
+        perceptron.Input = inputs;
+        perceptron.Solution();
+        return perceptron.Output;
+    }
+
+    private float[] NormalizeInputs(float[] inputs, float min, float max)
+    {
+        var normalizedInputs = new float[inputs.Length];
+        for (var i = 0; i < inputs.Length; i++) normalizedInputs[i] = (inputs[i] - min) / (max - min);
+        return normalizedInputs;
     }
 
     public void TrainNetwork()
@@ -86,7 +129,12 @@ public class UIHandler : MonoBehaviour
 
         var iterations = int.Parse(trainingIterationsIF.text);
         for (var i = 0; i < iterations; i++)
-            NetworkCalculator.TrainNetwork(network, inputs, outputs);
+        {
+            if (!useANNLibrary.isOn)
+                NetworkCalculator.TrainNetwork(network, inputs, outputs);
+            else
+                PLBBP.Learn(perceptron, inputs.ToArray(), outputs.ToArray());
+        }
 
         NetworkDisplayer.Instance.UpdateSliders();
         GraphNetwork();
@@ -94,32 +142,35 @@ public class UIHandler : MonoBehaviour
 
     public void GraphNetwork()
     {
-        foreach (var dot in GameObject.FindGameObjectsWithTag("Dot")) Destroy(dot);
+        if (FunctionGrapher.Instance.drawMode == FunctionGrapher.DrawMode.Dot)
+            foreach (var dot in GameObject.FindGameObjectsWithTag("Dot"))
+                Destroy(dot);
 
         FunctionGrapher.Instance.Graph2DFunction(
-            i =>
-            {
-                var output = NetworkCalculator.TestNetwork(network, new[] {i.Key, i.Value});
-                
-                int type;
-                Color color;
-                
-                if (output[0] > output[1])
-                {
-                    type = 0;
-                    color = new Color(1 - (output[0] - output[1]) * 0.75f, 0,0);
-                } else if (output[0] < output[1])
-                {
-                    type = 1;
-                    color = new Color(0, 0,1 - (output[1] - output[0]) * 0.75f);
-                }
-                else
-                {
-                    type = 2;
-                    color = Color.white;
-                }
-                
-                return new Point(i.Key, i.Value, type, color);
-            }, Color.magenta);
+            i => GetPointFromOutput(i.Key, i.Value, TestNetwork(new[] {i.Key, i.Value})), Color.magenta);
+    }
+
+    private Point GetPointFromOutput(float x, float y, IReadOnlyList<float> output)
+    {
+        int type;
+        Color color;
+
+        if (output[0] > output[1])
+        {
+            type = 0;
+            color = new Color(1 - (output[0] - output[1]) * 0.75f, 0, 0);
+        }
+        else if (output[0] < output[1])
+        {
+            type = 1;
+            color = new Color(0, 0, 1 - (output[1] - output[0]) * 0.75f);
+        }
+        else
+        {
+            type = 2;
+            color = Color.white;
+        }
+
+        return new Point(x, y, type, color);
     }
 }

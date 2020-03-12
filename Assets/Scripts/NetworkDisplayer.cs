@@ -73,7 +73,7 @@ public class NetworkDisplayer : MonoBehaviour
         newNetworkComponent.Initiate(NetworkSlider.SliderType.Weight, referenceNode, weightNode);
         currentSliders.Add(newNetworkComponent);
     }
-    
+
     private void InstantiateBiasSlider(string label, Node referenceNode)
     {
         var newSlider = InstantiateSlider(label);

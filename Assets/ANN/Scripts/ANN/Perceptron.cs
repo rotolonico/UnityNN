@@ -185,8 +185,8 @@ public class Perceptron
                 Minus = -1;
             if (Neuron[0][l] < Minus || Neuron[0][l] > 1)
             {
-                Debug.LogWarning("Input neuron №" + l + " received incorrect data: " + l + ". Aligned between values from " + Minus + " to 1");
-                Neuron[0][l] = Mathf.Clamp(Neuron[0][l], Minus, 1);
+                //Debug.LogWarning("Input neuron №" + l + " received incorrect data: " + l + ". Aligned between values from " + Minus + " to 1");
+                //Neuron[0][l] = Mathf.Clamp(Neuron[0][l], Minus, 1);
             }
             l++;
         }

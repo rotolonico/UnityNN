@@ -6,6 +6,7 @@ using UnityEngine;
 public static class NetworkCalculator
 {
     public static float weightDecay = 0.001f;
+    public static float momentum = 0;
     
     public static float[] TestNetwork(NeuralNetwork network, float[] inputs)
     {
@@ -21,6 +22,10 @@ public static class NetworkCalculator
 
         for (var i = 0; i < network.Layers[network.Layers.Length - 1].Nodes.Length; i++)
             outputs[i] = network.Layers[network.Layers.Length - 1].Nodes[i].CalculateValue();
+        
+        foreach (var layer in network.Layers)
+        foreach (var node in layer.Nodes)
+            node.ValueCalculated = false;
 
         return outputs;
     }
@@ -46,7 +51,7 @@ public static class NetworkCalculator
             {
                 foreach (var node in network.Layers[j].Nodes)
                 {
-                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * node.CalculateCostDelta();
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * 3 * node.CalculateCostDelta();
                     node.TrainingBiasSmudge += biasSmudge;
 
                     foreach (var connectedNode in node.GetConnectedNodes())
@@ -67,12 +72,12 @@ public static class NetworkCalculator
             {
                 node.SmudgeBias(node.TrainingBiasSmudge);
                 node.SetBias(node.GetBias() * (1 - weightDecay));
-                node.TrainingBiasSmudge *= 0.1f;
+                node.TrainingBiasSmudge *= momentum;
 
                 foreach (var connectedNode in node.GetConnectedNodes())
                 {
                     node.SmudgeWeight(connectedNode, node.TrainingWeightsSmudge[connectedNode]);
-                    node.TrainingWeightsSmudge[connectedNode] *= 0.1f;
+                    node.TrainingWeightsSmudge[connectedNode] *= momentum;
                     
                     node.SetWeight(connectedNode, node.GetWeight(connectedNode) * (1 - weightDecay));
                 }

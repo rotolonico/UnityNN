@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ChartAndGraph;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FunctionGrapher : MonoBehaviour
 {
     public static FunctionGrapher Instance;
 
-    private enum DrawMode
+    public enum DrawMode
     {
         Dot,
         Mesh,
@@ -26,10 +23,10 @@ public class FunctionGrapher : MonoBehaviour
 
     [SerializeField] private float graphMinOffset = -5;
     [SerializeField] private float graphMaxOffset = 5;
-    private int graphDetail = 1;
-    private float graphSpacingAbs = 0.05f;
+    [HideInInspector] public int graphDetail = 1;
+    [HideInInspector] public float graphSpacingAbs = 0.05f;
 
-    [SerializeField] private DrawMode drawMode = DrawMode.Dot;
+    [SerializeField] public DrawMode drawMode = DrawMode.Dot;
 
     private float graphSpacing;
     private float graphMinX;
@@ -44,10 +41,7 @@ public class FunctionGrapher : MonoBehaviour
     private GraphChartBase graphChartBase;
     private Texture2D texture;
 
-    public Slider graphDetailSlider;
-    public Slider graphSpacingSlider;
-    public Slider weightDecaySlider;
-    public Toggle dynamicColors;
+    
 
     private void Awake()
     {
@@ -61,12 +55,6 @@ public class FunctionGrapher : MonoBehaviour
             filterMode = FilterMode.Trilinear
         };
     }
-
-    public void UpdateDetail() => graphDetail = (int) graphDetailSlider.value;
-
-    public void UpdateSpacing() => graphSpacingAbs = graphSpacingSlider.value;
-
-    public void UpdateWeightDecay() => NetworkCalculator.weightDecay = weightDecaySlider.value;
 
     private void CalculateMinMax()
     {
@@ -157,7 +145,7 @@ public class FunctionGrapher : MonoBehaviour
                 DrawLine(lineRenderer[0], linePoints.ToArray());
                 break;*/
             case DrawMode.Texture:
-                DrawTexture(pointsList.Select(p => dynamicColors.isOn ? p.Color : p.Type == 1 ? Color.blue : Color.red).ToArray());
+                DrawTexture(pointsList.Select(p => UIHandler.Instance.dynamicColors.isOn ? p.Color : p.Type == 1 ? Color.blue : Color.red).ToArray());
                 break;
         }
     }

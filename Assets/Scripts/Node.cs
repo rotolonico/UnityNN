@@ -14,6 +14,7 @@ public class Node
     private float inputValue;
 
     public float Value { get; private set; }
+    public bool ValueCalculated;
     public float RawValue { get; private set; }
     private float desiredValue;
 
@@ -49,9 +50,12 @@ public class Node
 
     public float CalculateValue()
     {
+        if (ValueCalculated) return Value;
+        
         RawValue = isInput ? inputValue : weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias;
         Value = isInput ? inputValue : BasicFunctions.Sigmoid(RawValue);
         desiredValue = Value;
+        ValueCalculated = true;
         
         return Value;
     }
@@ -73,7 +77,7 @@ public class Node
 
     public void SmudgeDesiredValue(float newDesiredValue) => desiredValue += newDesiredValue;
 
-    public float CalculateCostDelta() => Mathf.Pow(desiredValue - Value, 3);
+    public float CalculateCostDelta() => Mathf.Pow(desiredValue - Value, 1);
 
     public Node[] GetConnectedNodes() => weights.Keys.ToArray();
 }
