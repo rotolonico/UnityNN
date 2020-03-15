@@ -4,13 +4,10 @@
 
     public readonly Layer[] Layers;
 
-    public NeuralNetwork(int inputsNumber, int[] hiddenLayersNumber, int outputsNumber)
+    public NeuralNetwork(int[] structure)
     {
-        Structure = new int[1 + hiddenLayersNumber.Length + 1];
-
-        Structure[0] = inputsNumber;
-        for (var i = 1; i < Structure.Length - 1; i++) Structure[i] = hiddenLayersNumber[i - 1];
-        Structure[Structure.Length - 1] = outputsNumber;
+        Structure = structure;
+        
         Layers = new Layer[Structure.Length];
         for (var i = 0; i < Layers.Length; i++)
         {

@@ -145,7 +145,12 @@ public class FunctionGrapher : MonoBehaviour
                 DrawLine(lineRenderer[0], linePoints.ToArray());
                 break;*/
             case DrawMode.Texture:
-                DrawTexture(pointsList.Select(p => UIHandler.Instance.dynamicColors.isOn ? p.Color : p.Type == 1 ? Color.blue : Color.red).ToArray());
+                DrawTexture(pointsList.Select(p =>
+                {
+                    var blackAndWhite = UIHandler.Instance.blackandWhite.isOn;
+                    return UIHandler.Instance.dynamicColors.isOn ? p.Color :
+                            p.Type == 1 ? blackAndWhite ? Color.white : Color.blue : blackAndWhite ? Color.black : Color.red;
+                }).ToArray());
                 break;
         }
     }

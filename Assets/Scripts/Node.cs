@@ -77,7 +77,12 @@ public class Node
 
     public void SmudgeDesiredValue(float newDesiredValue) => desiredValue += newDesiredValue;
 
-    public float CalculateCostDelta() => Mathf.Pow(desiredValue - Value, 1);
+    public float CalculateCostDelta(float classificationOverPrecision)
+    {
+        var cost = desiredValue - Value;
+        if (desiredValue < 0.5f && Value < 0.5f || desiredValue > 0.5f && Value > 0.5f) cost /= classificationOverPrecision;
+        return cost;
+    }
 
     public Node[] GetConnectedNodes() => weights.Keys.ToArray();
 }

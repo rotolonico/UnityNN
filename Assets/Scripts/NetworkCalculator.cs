@@ -6,6 +6,7 @@ using UnityEngine;
 public static class NetworkCalculator
 {
     public static float weightDecay = 0.001f;
+    public static float classificationOverPrecision = 1;
     public static float momentum = 0;
     
     public static float[] TestNetwork(NeuralNetwork network, float[] inputs)
@@ -51,7 +52,7 @@ public static class NetworkCalculator
             {
                 foreach (var node in network.Layers[j].Nodes)
                 {
-                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * 3 * node.CalculateCostDelta();
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * classificationOverPrecision * node.CalculateCostDelta(classificationOverPrecision);
                     node.TrainingBiasSmudge += biasSmudge;
 
                     foreach (var connectedNode in node.GetConnectedNodes())
