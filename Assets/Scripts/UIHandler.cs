@@ -167,8 +167,8 @@ public class UIHandler : MonoBehaviour
             foreach (var dot in GameObject.FindGameObjectsWithTag("Dot"))
                 Destroy(dot);
 
-        FunctionGrapher.Instance.Graph2DFunction(
-            i => GetPointFromOutput(i.Key, i.Value, TestNetwork(new[] {i.Key, i.Value})), Color.magenta);
+        FunctionGrapher.Instance.GraphCurrentFunction(
+            i => GetPointFromOutput(i.Key, i.Value, TestNetwork(new[] {i.Key, i.Value})));
     }
 
     public void SaveNetwork()

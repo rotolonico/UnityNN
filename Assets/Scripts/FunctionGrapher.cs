@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ChartAndGraph;
@@ -21,9 +22,9 @@ public class FunctionGrapher : MonoBehaviour
 
     [SerializeField] private Transform graphDot;
 
-    [SerializeField] private float graphMinOffset = -5;
-    [SerializeField] private float graphMaxOffset = 5;
-    [HideInInspector] public int graphDetail = 1;
+    [SerializeField] private float graphMinOffset = -2.5f;
+    [SerializeField] private float graphMaxOffset = 2.5f;
+    [HideInInspector] public int graphDetail = 5;
     [HideInInspector] public float graphSpacingAbs = 0.05f;
 
     [SerializeField] public DrawMode drawMode = DrawMode.Dot;
@@ -35,13 +36,17 @@ public class FunctionGrapher : MonoBehaviour
     private float graphMaxY;
 
     [SerializeField] private LineRenderer[] lineRenderer;
-    [SerializeField] private SpriteRenderer textureSpriteRenderer;
+    [SerializeField] private Renderer textureRenderer;
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
     private GraphChartBase graphChartBase;
     private Texture2D texture;
 
-    
+    private readonly List<Chunk> currentChunks = new List<Chunk>();
+    private Func<KeyValuePair<float, float>, Point> currentAction;
+
+    private bool detailFunction;
+    private float detailFunctionDelay;
 
     private void Awake()
     {
@@ -50,10 +55,7 @@ public class FunctionGrapher : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         backMeshFilter = transform.GetChild(0).GetComponent<MeshFilter>();
 
-        texture = new Texture2D(0, 0)
-        {
-            filterMode = FilterMode.Trilinear
-        };
+        texture = new Texture2D(0, 0);
     }
 
     private void CalculateMinMax()
@@ -68,60 +70,72 @@ public class FunctionGrapher : MonoBehaviour
         graphSpacing = cameraSize * graphSpacingAbs;
     }
 
-    public void GraphFunction(Func<float, float> action, Color color)
+    private void Update()
     {
-        CalculateMinMax();
-
-        var points = new List<Vector3>();
-        for (var x = graphMinX; x < graphMaxX; x += graphSpacing) points.Add(new Vector3(x, action(x)));
-        DrawLine(lineRenderer[1], points.ToArray());
+        detailFunctionDelay += Mathf.Min(Time.deltaTime, 0.09f);
+        if (!detailFunction || !(detailFunctionDelay > 0.1f)) return;
+        detailFunction = false;
+        StartCoroutine(DetailCurrentFunction());
     }
 
-    public void GraphFunctionForY(Func<float, float> action, Color color)
-    {
-        CalculateMinMax();
-
-        var points = new List<Vector3>();
-        for (var y = graphMinY; y < graphMaxY; y += graphSpacing) points.Add(new Vector3(action(y), y));
-        DrawLine(lineRenderer[2], points.ToArray());
-    }
-
-    public void Graph2DFunction(Func<KeyValuePair<float, float>, Point> action, Color color)
+    public void GraphCurrentFunction(Func<KeyValuePair<float, float>, Point> action)
     {
         CalculateMinMax();
         
-        var chunks = new List<Chunk>();
+        currentChunks.Clear();
+        currentAction = action;
         for (var y = graphMinY; y < graphMaxY - graphSpacing / 2; y += graphSpacing)
         for (var x = graphMinX; x < graphMaxX - graphSpacing / 2; x += graphSpacing)
         {
             var result = action(new KeyValuePair<float, float>(x, y));
-            chunks.Add(new Chunk(result, graphDetail));
+            currentChunks.Add(new Chunk(result));
         }
 
-        var edgeIndexes = GetEdgeChunksIndexes(chunks);
-        foreach (var chunk in edgeIndexes.Select(edgeIndex => chunks[edgeIndex]))
+        DrawCurrentFunction(false);
+        detailFunctionDelay = 0;
+        detailFunction = true;
+    }
+
+    private IEnumerator DetailCurrentFunction()
+    {
+        yield return null;
+        
+        var edgeIndexes = GetEdgeChunksIndexes(currentChunks);
+        foreach (var chunk in edgeIndexes.Select(edgeIndex => currentChunks[edgeIndex]))
         {
-            for (var y = 0; y < chunk.Size; y++)
-            for (var x = 0; x < chunk.Size; x++)
+            var mainPoint = chunk.Points[0];
+            chunk.Points = new Point[(int) Math.Pow(graphDetail, 2)];
+            for (var i = 0; i < chunk.Points.Length; i++) chunk.Points[i] = mainPoint;
+            
+            for (var y = 0; y < graphDetail; y++)
+            for (var x = 0; x < graphDetail; x++)
             {
-                var result = action(new KeyValuePair<float, float>(
+                var result = currentAction(new KeyValuePair<float, float>(
                     chunk.Points[y * graphDetail + x].X + x * graphSpacing / graphDetail - graphSpacing / graphDetail,
                     chunk.Points[y * graphDetail + x].Y + y * graphSpacing / graphDetail - graphSpacing / graphDetail));
                 chunk.Points[y * graphDetail + x] = result;
             }
         }
+        
+        DrawCurrentFunction(true);
+    }
 
-        var points = new Point[(int) Math.Sqrt(chunks.Count) * graphDetail,
-            (int) Math.Sqrt(chunks.Count) * graphDetail];
-        for (var c = 0; c < chunks.Count; c++)
+    private void DrawCurrentFunction(bool detailed)
+    {
+        var drawDetail = detailed ? graphDetail : 1;
+        var squaredDrawDetail = (int) Math.Pow(drawDetail, 2);
+        var points = new Point[(int) Math.Sqrt(currentChunks.Count) * drawDetail,
+            (int) Math.Sqrt(currentChunks.Count) * drawDetail];
+        for (var c = 0; c < currentChunks.Count; c++)
         {
-            var chunk = chunks[c];
-            for (var p = 0; p < chunk.Points.Length; p++)
+            var chunk = currentChunks[c];
+            for (var p = 0; p < squaredDrawDetail; p++)
             {
-                var x = chunk.Size * (int) Mathf.Floor(c / (float) Math.Sqrt(chunks.Count)) +
-                        (int) Mathf.Floor((float) p / chunk.Size);
-                var y = chunk.Size * (c % (int) Math.Sqrt(chunks.Count)) + p % chunk.Size;
-                var point = chunk.Points[p];
+                var pointIndex = Math.Min(p, chunk.Points.Length - 1);
+                var x = drawDetail * (int) Mathf.Floor(c / (float) Math.Sqrt(currentChunks.Count)) +
+                        (int) Mathf.Floor((float) p / drawDetail);
+                var y = drawDetail * (c % (int) Math.Sqrt(currentChunks.Count)) + p % drawDetail;
+                var point = chunk.Points[pointIndex];
                 points[x, y] = point;
             }
         }
@@ -132,9 +146,9 @@ public class FunctionGrapher : MonoBehaviour
         switch (drawMode)
         {
             case DrawMode.Dot:
-                var dotPoints = GetEdgeChunksIndexes(chunks);
-                foreach (var point in dotPoints.Select(p => new Vector2(chunks[p].Points[0].X, chunks[p].Points[0].Y)))
-                    DrawDot(point, color);
+                var dotPoints = GetEdgeChunksIndexes(currentChunks);
+                foreach (var point in dotPoints.Select(p => new Vector2(currentChunks[p].Points[0].X, currentChunks[p].Points[0].Y)))
+                    DrawDot(point, Color.magenta);
                 break;
             /*case DrawMode.Mesh:
                 var meshPoints = GetEdgeChunksIndexes(chunks);
@@ -149,8 +163,8 @@ public class FunctionGrapher : MonoBehaviour
                 {
                     var blackAndWhite = UIHandler.Instance.blackandWhite.isOn;
                     return UIHandler.Instance.dynamicColors.isOn ? p.Color :
-                            p.Type == 1 ? blackAndWhite ? Color.white : Color.blue : blackAndWhite ? Color.black : Color.red;
-                }).ToArray());
+                        p.Type == 1 ? blackAndWhite ? Color.white : Color.blue : blackAndWhite ? Color.black : Color.red;
+                }).ToArray(), !detailed);
                 break;
         }
     }
@@ -239,17 +253,17 @@ public class FunctionGrapher : MonoBehaviour
         lr.SetPositions(points);
     }
 
-    public void DrawTexture(Color[] colors)
+    public void DrawTexture(Color[] colors, bool blur)
     {
         texture.Resize((int) Math.Sqrt(colors.Length), (int) Math.Sqrt(colors.Length));
         texture.SetPixels(colors);
         texture.Apply();
+        texture.filterMode = blur ? FilterMode.Trilinear : FilterMode.Point;
 
         var cameraSize = CameraController.Instance.thisCam.orthographicSize;
 
-        textureSpriteRenderer.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height),
-            new Vector2(0.5f, 0.5f), 1);
-        textureSpriteRenderer.transform.localScale =
-            new Vector3(cameraSize * graphSpacingAbs / graphDetail, cameraSize * graphSpacingAbs / graphDetail);
+        textureRenderer.material.mainTexture = texture;
+        textureRenderer.transform.localScale =
+            new Vector3(cameraSize * graphSpacingAbs * 100, cameraSize * graphSpacingAbs * 100);
     }
 }
