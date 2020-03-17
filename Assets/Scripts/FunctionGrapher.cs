@@ -25,7 +25,7 @@ public class FunctionGrapher : MonoBehaviour
     [SerializeField] private float graphMinOffset = -2.5f;
     [SerializeField] private float graphMaxOffset = 2.5f;
     [HideInInspector] public int graphDetail = 5;
-    [HideInInspector] public float graphSpacingAbs = 0.05f;
+    [HideInInspector] public float graphSpacingAbs = 0.04f;
 
     [SerializeField] public DrawMode drawMode = DrawMode.Dot;
 
@@ -75,7 +75,7 @@ public class FunctionGrapher : MonoBehaviour
         detailFunctionDelay += Mathf.Min(Time.deltaTime, 0.09f);
         if (!detailFunction || !(detailFunctionDelay > 0.1f)) return;
         detailFunction = false;
-        StartCoroutine(DetailCurrentFunction());
+        if (!UIHandler.Instance.blackandWhite.isOn) StartCoroutine(DetailCurrentFunction());
     }
 
     public void GraphCurrentFunction(Func<KeyValuePair<float, float>, Point> action)
@@ -238,7 +238,6 @@ public class FunctionGrapher : MonoBehaviour
             vertices2D[i] = new Vector2(thickPoints[i].x, thickPoints[i].y);
         }
 
-
         var tr = new Triangulator(vertices2D);
         var indices = tr.Triangulate();
         var mesh = new Mesh {vertices = thickPoints, triangles = indices};
@@ -258,12 +257,12 @@ public class FunctionGrapher : MonoBehaviour
         texture.Resize((int) Math.Sqrt(colors.Length), (int) Math.Sqrt(colors.Length));
         texture.SetPixels(colors);
         texture.Apply();
-        texture.filterMode = blur ? FilterMode.Trilinear : FilterMode.Point;
+        texture.filterMode = blur ? FilterMode.Trilinear : FilterMode.Trilinear;
 
         var cameraSize = CameraController.Instance.thisCam.orthographicSize;
 
         textureRenderer.material.mainTexture = texture;
         textureRenderer.transform.localScale =
-            new Vector3(cameraSize * graphSpacingAbs * 100, cameraSize * graphSpacingAbs * 100);
+            new Vector3(cameraSize * (graphMaxOffset - graphMinOffset), cameraSize * (graphMaxOffset - graphMinOffset));
     }
 }

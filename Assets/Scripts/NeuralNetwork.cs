@@ -4,6 +4,8 @@
 
     public readonly Layer[] Layers;
 
+    public bool Done;
+
     public NeuralNetwork(int[] structure)
     {
         Structure = structure;

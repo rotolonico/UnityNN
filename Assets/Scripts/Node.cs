@@ -14,6 +14,7 @@ public class Node
     private float inputValue;
 
     public float Value { get; private set; }
+    public bool isAcceptableValue;
     public bool ValueCalculated;
     public float RawValue { get; private set; }
     private float desiredValue;
@@ -77,10 +78,15 @@ public class Node
 
     public void SmudgeDesiredValue(float newDesiredValue) => desiredValue += newDesiredValue;
 
-    public float CalculateCostDelta(float classificationOverPrecision)
+    public float CalculateCostDelta(float classificationOverPrecision, float maxError)
     {
         var cost = desiredValue - Value;
-        if (desiredValue < 0.5f && Value < 0.5f || desiredValue > 0.5f && Value > 0.5f) cost /= classificationOverPrecision;
+        if (desiredValue < 0.5f && Value < 0.5f || desiredValue > 0.5f && Value > 0.5f)
+        {
+            isAcceptableValue = Mathf.Abs(cost) <= maxError;
+            cost /= classificationOverPrecision;
+        }
+        else isAcceptableValue = false;
         return cost;
     }
 

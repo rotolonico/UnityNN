@@ -8,7 +8,8 @@ public static class NetworkCalculator
     public static float weightDecay = 0.001f;
     public static float classificationOverPrecision = 1;
     public static float momentum = 0;
-    
+    public static float maxError = 0;
+
     public static float[] TestNetwork(NeuralNetwork network, float[] inputs)
     {
         if (network.Structure[0] != inputs.Length)
@@ -40,6 +41,8 @@ public static class NetworkCalculator
             return;
         }
         
+        var doneTraining = true;
+        
         for (var i = 0; i < inputs.Count; i++)
         {
             var input = inputs[i];
@@ -52,8 +55,10 @@ public static class NetworkCalculator
             {
                 foreach (var node in network.Layers[j].Nodes)
                 {
-                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * classificationOverPrecision * node.CalculateCostDelta(classificationOverPrecision);
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * classificationOverPrecision * node.CalculateCostDelta(classificationOverPrecision, maxError);
                     node.TrainingBiasSmudge += biasSmudge;
+                    
+                    if (!node.isAcceptableValue) doneTraining = false;
 
                     foreach (var connectedNode in node.GetConnectedNodes())
                     {
@@ -65,6 +70,13 @@ public static class NetworkCalculator
                     }
                 }
             }
+        }
+
+        if (doneTraining)
+        {
+            network.Done = true;
+            Debug.Log("Done!");
+            return;
         }
 
         for (var i = network.Layers.Length - 1; i >= 1; i--)
@@ -82,10 +94,12 @@ public static class NetworkCalculator
                     
                     node.SetWeight(connectedNode, node.GetWeight(connectedNode) * (1 - weightDecay));
                 }
-                
+
                 node.SetDesiredValue(0);
             }
         }
+
+        
 
     }
 }

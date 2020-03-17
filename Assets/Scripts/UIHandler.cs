@@ -17,6 +17,7 @@ public class UIHandler : MonoBehaviour
     public Slider weightDecaySlider;
     public Slider momentumSlider;
     public Slider classificationOverPrecisionSlider;
+    public Slider maxErrorSlider;
     public Toggle dynamicColors;
     public Toggle constantLearning;
     public Toggle blackandWhite;
@@ -46,6 +47,12 @@ public class UIHandler : MonoBehaviour
     
     public void UpdateClassificationOverPrecision() => NetworkCalculator.classificationOverPrecision = classificationOverPrecisionSlider.value;
 
+    public void UpdateMaxError()
+    {
+        NetworkCalculator.maxError = maxErrorSlider.value;
+        network.Done = false;
+    }
+
     private void Update()
     {
         if (constantLearning.isOn) TrainNetwork();
@@ -56,12 +63,14 @@ public class UIHandler : MonoBehaviour
         {
             var mousePosition = GetWorldMousePosition();
             FlowerSpawner.Instance.SpawnRedFlower(mousePosition);
+            network.Done = false;
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             var mousePosition = GetWorldMousePosition();
             FlowerSpawner.Instance.SpawnBlueFlower(mousePosition);
+            network.Done = false;
         }
 
         if (Input.GetMouseButtonDown(2))
@@ -136,7 +145,15 @@ public class UIHandler : MonoBehaviour
         for (var i = 0; i < iterations; i++)
         {
             if (!useANNLibrary.isOn)
+            {
+                if (network.Done)
+                {
+                    NetworkDisplayer.Instance.UpdateSliders();
+                    GraphNetwork();
+                    return;
+                }
                 NetworkCalculator.TrainNetwork(network, inputsOutputs.Key, inputsOutputs.Value);
+            }
             else
                 PLBBP.Learn(perceptron, inputsOutputs.Key.ToArray(), inputsOutputs.Value.ToArray());
         }
