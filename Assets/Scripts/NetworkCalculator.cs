@@ -5,11 +5,6 @@ using UnityEngine;
 
 public static class NetworkCalculator
 {
-    public static float weightDecay = 0.001f;
-    public static float classificationOverPrecision = 1;
-    public static float momentum = 0;
-    public static float maxError = 0;
-
     public static float[] TestNetwork(NeuralNetwork network, float[] inputs)
     {
         if (network.Structure[0] != inputs.Length)
@@ -55,7 +50,7 @@ public static class NetworkCalculator
             {
                 foreach (var node in network.Layers[j].Nodes)
                 {
-                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * classificationOverPrecision * node.CalculateCostDelta(classificationOverPrecision, maxError);
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * network.ClassificationOverPrecision * node.CalculateCostDelta(network.ClassificationOverPrecision, network.MaxError);
                     node.TrainingBiasSmudge += biasSmudge;
                     
                     if (!node.isAcceptableValue) doneTraining = false;
@@ -84,15 +79,15 @@ public static class NetworkCalculator
             foreach (var node in network.Layers[i].Nodes)
             {
                 node.SmudgeBias(node.TrainingBiasSmudge);
-                node.SetBias(node.GetBias() * (1 - weightDecay));
-                node.TrainingBiasSmudge *= momentum;
+                node.SetBias(node.GetBias() * (1 - network.WeightDecay));
+                node.TrainingBiasSmudge *= network.Momentum;
 
                 foreach (var connectedNode in node.GetConnectedNodes())
                 {
                     node.SmudgeWeight(connectedNode, node.TrainingWeightsSmudge[connectedNode]);
-                    node.TrainingWeightsSmudge[connectedNode] *= momentum;
+                    node.TrainingWeightsSmudge[connectedNode] *= network.Momentum;
                     
-                    node.SetWeight(connectedNode, node.GetWeight(connectedNode) * (1 - weightDecay));
+                    node.SetWeight(connectedNode, node.GetWeight(connectedNode) * (1 - network.WeightDecay));
                 }
 
                 node.SetDesiredValue(0);

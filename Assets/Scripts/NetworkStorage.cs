@@ -18,8 +18,11 @@ public static class NetworkStorage
         var json = !File.Exists($"{Application.persistentDataPath}/networkSaves/{path}")
             ? ""
             : File.ReadAllText($"{Application.persistentDataPath}/networkSaves/{path}");
-        
+
         if (json == "") return null;
-        return StringSerializationAPI.Deserialize(typeof(NetworkSave), json) as NetworkSave;
+        return LoadNetworkFromJSON(json);
     }
+
+    public static NetworkSave LoadNetworkFromJSON(string json) =>
+        StringSerializationAPI.Deserialize(typeof(NetworkSave), json) as NetworkSave;
 }

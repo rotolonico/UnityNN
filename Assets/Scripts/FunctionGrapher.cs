@@ -75,7 +75,7 @@ public class FunctionGrapher : MonoBehaviour
         detailFunctionDelay += Mathf.Min(Time.deltaTime, 0.09f);
         if (!detailFunction || !(detailFunctionDelay > 0.1f)) return;
         detailFunction = false;
-        if (!UIHandler.Instance.blackandWhite.isOn) StartCoroutine(DetailCurrentFunction());
+        if (!UIHandler.Instance.customColors.isOn) StartCoroutine(DetailCurrentFunction());
     }
 
     public void GraphCurrentFunction(Func<KeyValuePair<float, float>, Point> action)
@@ -161,7 +161,7 @@ public class FunctionGrapher : MonoBehaviour
             case DrawMode.Texture:
                 DrawTexture(pointsList.Select(p =>
                 {
-                    var blackAndWhite = UIHandler.Instance.blackandWhite.isOn;
+                    var blackAndWhite = UIHandler.Instance.customColors.isOn;
                     return UIHandler.Instance.dynamicColors.isOn ? p.Color :
                         p.Type == 1 ? blackAndWhite ? Color.white : Color.blue : blackAndWhite ? Color.black : Color.red;
                 }).ToArray(), !detailed);

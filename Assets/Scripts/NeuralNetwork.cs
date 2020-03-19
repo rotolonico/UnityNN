@@ -1,8 +1,12 @@
 ﻿public class NeuralNetwork
 {
     public readonly int[] Structure;
-
     public readonly Layer[] Layers;
+    
+    public float WeightDecay = 0.001f;
+    public float ClassificationOverPrecision = 1;
+    public float Momentum = 0;
+    public float MaxError = 0;
 
     public bool Done;
 

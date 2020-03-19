@@ -67,12 +67,12 @@ public class Node
 
     public void SetWeight(Node node, float weight) => weights[node] = weight;
 
-    public void SmudgeWeight(Node node, float weight) => weights[node] += weight;
+    public void SmudgeWeight(Node node, float weight) => weights[node] = Mathf.Clamp(-5, weights[node] + weight, 5);
 
     public float GetBias() => bias;
 
     public void SetBias(float newBias) => bias = newBias;
-    public void SmudgeBias(float newBias) => bias += newBias;
+    public void SmudgeBias(float newBias) => bias = Mathf.Clamp(-5, bias + newBias, 5);
 
     public void SetDesiredValue(float newDesiredValue) => desiredValue = newDesiredValue;
 

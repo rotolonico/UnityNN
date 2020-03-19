@@ -9,8 +9,8 @@ public class UIHandler : MonoBehaviour
 {
     public static UIHandler Instance;
 
-    public TMP_InputField networkStructureIF;
-    public TMP_InputField trainingIterationsIF;
+    public Slider networkStructureSlider;
+    public Slider trainingIterations;
     public TMP_InputField saveNameIF;
     public Slider graphDetailSlider;
     public Slider graphSpacingSlider;
@@ -20,8 +20,11 @@ public class UIHandler : MonoBehaviour
     public Slider maxErrorSlider;
     public Toggle dynamicColors;
     public Toggle constantLearning;
-    public Toggle blackandWhite;
+    public Toggle customColors;
     public Toggle useANNLibrary;
+
+    public Color customColor1;
+    public Color customColor2;
 
     private NeuralNetwork network;
 
@@ -41,15 +44,15 @@ public class UIHandler : MonoBehaviour
 
     public void UpdateSpacing() => FunctionGrapher.Instance.graphSpacingAbs = graphSpacingSlider.value;
 
-    public void UpdateWeightDecay() => NetworkCalculator.weightDecay = weightDecaySlider.value;
+    public void UpdateWeightDecay() => network.WeightDecay = weightDecaySlider.value;
 
-    public void UpdateMomentum() => NetworkCalculator.momentum = momentumSlider.value;
+    public void UpdateMomentum() => network.Momentum = momentumSlider.value;
     
-    public void UpdateClassificationOverPrecision() => NetworkCalculator.classificationOverPrecision = classificationOverPrecisionSlider.value;
+    public void UpdateClassificationOverPrecision() => network.ClassificationOverPrecision = classificationOverPrecisionSlider.value;
 
     public void UpdateMaxError()
     {
-        NetworkCalculator.maxError = maxErrorSlider.value;
+        network.MaxError = maxErrorSlider.value;
         network.Done = false;
     }
 
@@ -101,12 +104,10 @@ public class UIHandler : MonoBehaviour
 
     public void ChangeNetwork()
     {
-        var splitStructure = networkStructureIF.text != "" ? networkStructureIF.text.Split('.') : new string[0];
-        var networkStructure = new int[1 + splitStructure.Length + 1];
+        var networkStructure = new int[3];
         networkStructure[0] = 2;
-        for (var i = 0; i < splitStructure.Length; i++)
-            networkStructure[i + 1] = int.Parse(splitStructure[i]);
-        networkStructure[splitStructure.Length + 1] = 2;
+        networkStructure[1] = (int) networkStructureSlider.value;
+        networkStructure[2] = 2;
 
         ChangeNetwork(networkStructure);
     }
@@ -137,9 +138,7 @@ public class UIHandler : MonoBehaviour
 
     public void TrainNetwork()
     {
-        if (string.IsNullOrEmpty(trainingIterationsIF.text)) return;
-        
-        var iterations = int.Parse(trainingIterationsIF.text);
+        var iterations = trainingIterations.value;
         var inputsOutputs = GetInputsOutputs();
         
         for (var i = 0; i < iterations; i++)
@@ -194,11 +193,8 @@ public class UIHandler : MonoBehaviour
 
         var networkSave = new NetworkSave
         {
-            structure = network.Structure,
+            network = network,
             inputsOutputs = GetInputsOutputs(),
-            decay = weightDecaySlider.value,
-            momentum = momentumSlider.value,
-            classificationOverPrecision = classificationOverPrecisionSlider.value
         };
 
         NetworkStorage.SaveNetwork(networkSave, saveNameIF.text);
@@ -210,12 +206,23 @@ public class UIHandler : MonoBehaviour
 
         var networkSave = NetworkStorage.LoadNetwork(saveNameIF.text);
         if (networkSave == null) return;
+        ImplementNetwork(networkSave);
+    }
 
-        ChangeNetwork(networkSave.structure);
+    public void LoadNetworkFromResources(string networkName)
+    {
+        var networkSaveJson = Resources.Load<TextAsset>($"{networkName}").text;
+        var networkSave = NetworkStorage.LoadNetworkFromJSON(networkSaveJson);
+        ImplementNetwork(networkSave);
+    }
 
-        weightDecaySlider.value = networkSave.decay;
-        momentumSlider.value = networkSave.momentum;
-        classificationOverPrecisionSlider.value = networkSave.classificationOverPrecision; 
+    private void ImplementNetwork(NetworkSave networkSave)
+    {
+        ChangeNetwork(networkSave.network.Structure);
+
+        weightDecaySlider.value = networkSave.network.WeightDecay;
+        momentumSlider.value = networkSave.network.Momentum;
+        classificationOverPrecisionSlider.value = networkSave.network.ClassificationOverPrecision; 
 
         var inputs = networkSave.inputsOutputs.Key;
         var outputs = networkSave.inputsOutputs.Value;
@@ -240,22 +247,21 @@ public class UIHandler : MonoBehaviour
         if (output[0] > output[1])
         {
             type = 0;
-            if (!blackandWhite.isOn) color = new Color(1 - (output[0] - output[1]) * 0.75f, 0, 0);
+            if (!customColors.isOn) color = new Color(1 - (output[0] - output[1]) * 0.75f, 0, 0);
         }
         else if (output[0] < output[1])
         {
             type = 1;
-            if (!blackandWhite.isOn) color = new Color(0, 0, 1 - (output[1] - output[0]) * 0.75f);
+            if (!customColors.isOn) color = new Color(0, 0, 1 - (output[1] - output[0]) * 0.75f);
         }
         else
         {
             type = 2;
-            if (!blackandWhite.isOn) color = Color.white;
+            if (!customColors.isOn) color = Color.white;
         }
-        
-        if (blackandWhite.isOn)
-            color = new Color((1 + output[1] - output[0]) / 2, (1 + output[1] - output[0]) / 2,
-                (1 + output[1] - output[0]) / 2);
+
+        if (customColors.isOn)
+            color = Color.Lerp(customColor1, customColor2, (1 + output[1] - output[0]) / 2);
 
         return new Point(x, y, type, color);
     }
