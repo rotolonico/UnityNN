@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ChartAndGraph;
 using UnityEngine;
 
 public class FunctionGrapher : MonoBehaviour
@@ -39,7 +38,6 @@ public class FunctionGrapher : MonoBehaviour
     [SerializeField] private Renderer textureRenderer;
     private MeshFilter meshFilter;
     private MeshFilter backMeshFilter;
-    private GraphChartBase graphChartBase;
     private Texture2D texture;
 
     private readonly List<Chunk> currentChunks = new List<Chunk>();

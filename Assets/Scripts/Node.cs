@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public class Node
 {
-    private readonly Dictionary<Node, float> weights;
-    private float bias;
+    [SerializeField] private Dictionary<Node, float> weights;
+    [SerializeField] private float bias;
     public float TrainingBiasSmudge { get; set; }
     public Dictionary<Node, float> TrainingWeightsSmudge { get; set; }
 
-    private bool isInput;
+    public Dictionary<Node, float> CorrectWeights { get; set; }
+    public float CorrectBias { get; set; }
+
+    [SerializeField] private bool isInput;
     private float inputValue;
 
     public float Value { get; private set; }
@@ -36,6 +40,7 @@ public class Node
             weights.Add(node, RandomnessHandler.RandomZeroToOne() * Mathf.Sqrt(2f / nodes.Length));
             TrainingWeightsSmudge.Add(node, 0);
         }
+
         bias = 0;
         this.isInput = isInput;
     }
@@ -52,12 +57,12 @@ public class Node
     public float CalculateValue()
     {
         if (ValueCalculated) return Value;
-        
+
         RawValue = isInput ? inputValue : weights.Sum(weight => weight.Key.CalculateValue() * weight.Value) + bias;
         Value = isInput ? inputValue : BasicFunctions.Sigmoid(RawValue);
         desiredValue = Value;
         ValueCalculated = true;
-        
+
         return Value;
     }
 
@@ -87,8 +92,17 @@ public class Node
             cost /= classificationOverPrecision;
         }
         else isAcceptableValue = false;
+
         return cost;
     }
 
     public Node[] GetConnectedNodes() => weights.Keys.ToArray();
+
+    public void PrepareNodeToSave()
+    {
+        CorrectBias = bias;
+        CorrectWeights = new Dictionary<Node, float>(weights);
+        bias = RandomnessHandler.RandomMinMax(-5, 5);
+        foreach (var node in CorrectWeights.Keys) weights[node] = RandomnessHandler.RandomMinMax(-5, 5);
+    }
 }

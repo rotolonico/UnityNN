@@ -93,8 +93,24 @@ public static class NetworkCalculator
                 node.SetDesiredValue(0);
             }
         }
+    }
 
-        
+    public static void LerpToCorrectParams(NeuralNetwork network, float speed)
+    {
+        for (var i = network.Layers.Length - 1; i >= 1; i--)
+        {
+            foreach (var node in network.Layers[i].Nodes)
+            {
+                var nodeBias = node.GetBias();
+                node.SetBias(nodeBias + (node.CorrectBias - nodeBias) * speed);
 
+                var nodes = node.GetConnectedNodes();
+                foreach (var connectedNode in nodes)
+                {    
+                    var nodeWeight = node.GetWeight(connectedNode);
+                    node.SetWeight(connectedNode, nodeWeight + (node.CorrectWeights[connectedNode] - nodeWeight) * speed);
+                }
+            }
+        }
     }
 }

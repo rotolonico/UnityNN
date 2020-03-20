@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
     public static UIHandler Instance;
+
+    public bool allowMovement;
+    public bool allowPlacing;
 
     public Slider networkStructureSlider;
     public Slider trainingIterations;
@@ -21,21 +27,18 @@ public class UIHandler : MonoBehaviour
     public Toggle dynamicColors;
     public Toggle constantLearning;
     public Toggle customColors;
-    public Toggle useANNLibrary;
+    public GameObject stuckButton;
 
     public Color customColor1;
     public Color customColor2;
 
     private NeuralNetwork network;
 
-    private Perceptron perceptron = new Perceptron();
-    private PerceptronLernByBackPropagation PLBBP = new PerceptronLernByBackPropagation();
-
     private void Start()
     {
         Instance = this;
-        if (!useANNLibrary.isOn) network = new NeuralNetwork(new[] {2, 3, 2});
-        else perceptron.CreatePerceptron(2, new[] {3}, 2);
+        CameraController.Instance.isActive = allowMovement;
+        network = new NeuralNetwork(new[] {2, 3, 2});
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
     }
@@ -47,8 +50,9 @@ public class UIHandler : MonoBehaviour
     public void UpdateWeightDecay() => network.WeightDecay = weightDecaySlider.value;
 
     public void UpdateMomentum() => network.Momentum = momentumSlider.value;
-    
-    public void UpdateClassificationOverPrecision() => network.ClassificationOverPrecision = classificationOverPrecisionSlider.value;
+
+    public void UpdateClassificationOverPrecision() =>
+        network.ClassificationOverPrecision = classificationOverPrecisionSlider.value;
 
     public void UpdateMaxError()
     {
@@ -60,7 +64,7 @@ public class UIHandler : MonoBehaviour
     {
         if (constantLearning.isOn) TrainNetwork();
 
-        if (!Input.GetKey(KeyCode.LeftControl)) return;
+        if (!allowPlacing || InputUIBlocker.BlockedByUI) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -75,24 +79,12 @@ public class UIHandler : MonoBehaviour
             FlowerSpawner.Instance.SpawnBlueFlower(mousePosition);
             network.Done = false;
         }
+    }
 
-        if (Input.GetMouseButtonDown(2))
-        {
-            var mousePosition = GetWorldMousePosition();
-
-            var inputs = (new[] {mousePosition.x, mousePosition.y});
-            var output = TestNetwork(inputs);
-
-            Debug.Log(
-                $"INPUTS: {inputs[0]} {inputs[1]} OUTPUTS: {string.Join(" ", output)} {(output[0] >= output[1] ? "Red" : "Blue")}");
-            Debug.Log(output[0] >= output[1] ? "Red" : "Blue");
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
-            foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
-        }
+    public void ClearFlowers()
+    {
+        foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
+        foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
     }
 
     private Vector3 GetWorldMousePosition()
@@ -114,20 +106,12 @@ public class UIHandler : MonoBehaviour
 
     private void ChangeNetwork(int[] networkStructure)
     {
-        if (!useANNLibrary.isOn) network = new NeuralNetwork(networkStructure);
-        else perceptron.CreatePerceptron(2, networkStructure, 2);
+        network = new NeuralNetwork(networkStructure);
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
     }
 
-    private float[] TestNetwork(float[] inputs)
-    {
-        if (!useANNLibrary.isOn)
-            return NetworkCalculator.TestNetwork(network, inputs);
-        perceptron.Input = inputs;
-        perceptron.Solution();
-        return perceptron.Output;
-    }
+    private float[] TestNetwork(float[] inputs) => NetworkCalculator.TestNetwork(network, inputs);
 
     private float[] NormalizeInputs(float[] inputs, float min, float max)
     {
@@ -140,21 +124,17 @@ public class UIHandler : MonoBehaviour
     {
         var iterations = trainingIterations.value;
         var inputsOutputs = GetInputsOutputs();
-        
+
         for (var i = 0; i < iterations; i++)
         {
-            if (!useANNLibrary.isOn)
+            if (network.Done)
             {
-                if (network.Done)
-                {
-                    NetworkDisplayer.Instance.UpdateSliders();
-                    GraphNetwork();
-                    return;
-                }
-                NetworkCalculator.TrainNetwork(network, inputsOutputs.Key, inputsOutputs.Value);
+                NetworkDisplayer.Instance.UpdateSliders();
+                GraphNetwork();
+                return;
             }
-            else
-                PLBBP.Learn(perceptron, inputsOutputs.Key.ToArray(), inputsOutputs.Value.ToArray());
+
+            NetworkCalculator.TrainNetwork(network, inputsOutputs.Key, inputsOutputs.Value);
         }
 
         NetworkDisplayer.Instance.UpdateSliders();
@@ -191,6 +171,10 @@ public class UIHandler : MonoBehaviour
     {
         if (string.IsNullOrEmpty(saveNameIF.text)) return;
 
+        for (var i = network.Layers.Length - 1; i >= 1; i--)
+            foreach (var node in network.Layers[i].Nodes)
+                node.PrepareNodeToSave();
+
         var networkSave = new NetworkSave
         {
             network = network,
@@ -218,15 +202,15 @@ public class UIHandler : MonoBehaviour
 
     private void ImplementNetwork(NetworkSave networkSave)
     {
-        ChangeNetwork(networkSave.network.Structure);
+        network = networkSave.network;
 
         weightDecaySlider.value = networkSave.network.WeightDecay;
         momentumSlider.value = networkSave.network.Momentum;
-        classificationOverPrecisionSlider.value = networkSave.network.ClassificationOverPrecision; 
+        classificationOverPrecisionSlider.value = networkSave.network.ClassificationOverPrecision;
 
         var inputs = networkSave.inputsOutputs.Key;
         var outputs = networkSave.inputsOutputs.Value;
-        
+
         foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
         foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
 
@@ -237,6 +221,9 @@ public class UIHandler : MonoBehaviour
             else
                 FlowerSpawner.Instance.SpawnRedFlower(new Vector2(inputs[i][0], inputs[i][1]));
         }
+
+        NetworkDisplayer.Instance.DisplayNetwork(network);
+        GraphNetwork();
     }
 
     private Point GetPointFromOutput(float x, float y, IReadOnlyList<float> output)
@@ -265,4 +252,29 @@ public class UIHandler : MonoBehaviour
 
         return new Point(x, y, type, color);
     }
+
+    public void GetHint()
+    {
+        StartCoroutine(GetHintCoroutine());
+    }
+
+    private IEnumerator GetHintCoroutine()
+    {
+        stuckButton.SetActive(false);
+        
+        for (var i = 0; i < 50; i++)
+        {
+            yield return null;
+            NetworkCalculator.LerpToCorrectParams(network, 0.01f);
+            NetworkDisplayer.Instance.UpdateSliders();
+            GraphNetwork();
+        }
+
+        yield return new WaitForSecondsRealtime(30);
+        stuckButton.SetActive(true);
+    }
+
+    public void GoToDemo1() => SceneManager.LoadScene(0);
+
+    public void GoToDemo2() => SceneManager.LoadScene(1);
 }
