@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -27,12 +26,16 @@ public class UIHandler : MonoBehaviour
     public Toggle dynamicColors;
     public Toggle constantLearning;
     public Toggle customColors;
+
     public GameObject stuckButton;
 
     public Color customColor1;
     public Color customColor2;
 
     private NeuralNetwork network;
+    private GameObject[] currentRedFlowers;
+    private GameObject[] currentBlueFlowers;
+    private bool calculatedFlowers;
 
     private void Start()
     {
@@ -41,6 +44,13 @@ public class UIHandler : MonoBehaviour
         network = new NeuralNetwork(new[] {2, 3, 2});
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
+
+        UpdateDetail();
+        UpdateSpacing();
+        UpdateWeightDecay();
+        UpdateMomentum();
+        UpdateClassificationOverPrecision();
+        UpdateMaxError();
     }
 
     public void UpdateDetail() => FunctionGrapher.Instance.graphDetail = (int) graphDetailSlider.value;
@@ -69,22 +79,32 @@ public class UIHandler : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             var mousePosition = GetWorldMousePosition();
-            FlowerSpawner.Instance.SpawnRedFlower(mousePosition);
+            FlowersHandler.Instance.SpawnRedFlower(mousePosition);
+            calculatedFlowers = false;
             network.Done = false;
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             var mousePosition = GetWorldMousePosition();
-            FlowerSpawner.Instance.SpawnBlueFlower(mousePosition);
+            FlowersHandler.Instance.SpawnBlueFlower(mousePosition);
+            calculatedFlowers = false;
+            network.Done = false;
+        }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            var mousePosition = GetWorldMousePosition();
+            FlowersHandler.Instance.RemoveFlower(mousePosition);
+            calculatedFlowers = false;
             network.Done = false;
         }
     }
 
     public void ClearFlowers()
     {
-        foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
-        foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
+        FlowersHandler.Instance.ClearFlowers();
+        calculatedFlowers = false;
     }
 
     private Vector3 GetWorldMousePosition()
@@ -113,13 +133,6 @@ public class UIHandler : MonoBehaviour
 
     private float[] TestNetwork(float[] inputs) => NetworkCalculator.TestNetwork(network, inputs);
 
-    private float[] NormalizeInputs(float[] inputs, float min, float max)
-    {
-        var normalizedInputs = new float[inputs.Length];
-        for (var i = 0; i < inputs.Length; i++) normalizedInputs[i] = (inputs[i] - min) / (max - min);
-        return normalizedInputs;
-    }
-
     public void TrainNetwork()
     {
         var iterations = trainingIterations.value;
@@ -143,10 +156,17 @@ public class UIHandler : MonoBehaviour
 
     private KeyValuePair<List<float[]>, List<float[]>> GetInputsOutputs()
     {
-        var redFlowersPositions = GameObject.FindGameObjectsWithTag("RedFlower").ToList()
-            .Select(f => f.transform.position).ToArray();
-        var blueFlowersPositions = GameObject.FindGameObjectsWithTag("BlueFlower").ToList()
-            .Select(f => f.transform.position).ToArray();
+        var redFlowers = calculatedFlowers ? currentRedFlowers : GameObject.FindGameObjectsWithTag("RedFlower");
+        var blueFlowers = calculatedFlowers ? currentBlueFlowers : GameObject.FindGameObjectsWithTag("BlueFlower");
+        if (!calculatedFlowers)
+        {
+            currentRedFlowers = redFlowers;
+            currentBlueFlowers = blueFlowers;
+            calculatedFlowers = true;
+        }
+
+        var redFlowersPositions = redFlowers.Select(f => f.transform.position).ToArray();
+        var blueFlowersPositions = blueFlowers.Select(f => f.transform.position).ToArray();
 
         var inputs = redFlowersPositions.Select(pos => new[] {pos.x, pos.y}).ToList();
         inputs.AddRange(blueFlowersPositions.Select(pos => new[] {pos.x, pos.y}));
@@ -198,6 +218,9 @@ public class UIHandler : MonoBehaviour
         var networkSaveJson = Resources.Load<TextAsset>($"{networkName}").text;
         var networkSave = NetworkStorage.LoadNetworkFromJSON(networkSaveJson);
         ImplementNetwork(networkSave);
+
+        StopAllCoroutines();
+        stuckButton.SetActive(true);
     }
 
     private void ImplementNetwork(NetworkSave networkSave)
@@ -211,15 +234,19 @@ public class UIHandler : MonoBehaviour
         var inputs = networkSave.inputsOutputs.Key;
         var outputs = networkSave.inputsOutputs.Value;
 
+        for (var i = network.Layers.Length - 1; i >= 1; i--)
+            foreach (var node in network.Layers[i].Nodes)
+                node.RandomizeWeightsAndBiases();
+
         foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
         foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
 
         for (var i = 0; i < inputs.Count; i++)
         {
             if (Math.Abs(outputs[i][0]) < 0.01f)
-                FlowerSpawner.Instance.SpawnBlueFlower(new Vector2(inputs[i][0], inputs[i][1]));
+                FlowersHandler.Instance.SpawnBlueFlower(new Vector2(inputs[i][0], inputs[i][1]));
             else
-                FlowerSpawner.Instance.SpawnRedFlower(new Vector2(inputs[i][0], inputs[i][1]));
+                FlowersHandler.Instance.SpawnRedFlower(new Vector2(inputs[i][0], inputs[i][1]));
         }
 
         NetworkDisplayer.Instance.DisplayNetwork(network);
@@ -261,7 +288,7 @@ public class UIHandler : MonoBehaviour
     private IEnumerator GetHintCoroutine()
     {
         stuckButton.SetActive(false);
-        
+
         for (var i = 0; i < 50; i++)
         {
             yield return null;

@@ -102,6 +102,11 @@ public class Node
     {
         CorrectBias = bias;
         CorrectWeights = new Dictionary<Node, float>(weights);
+        RandomizeWeightsAndBiases();
+    }
+    
+    public void RandomizeWeightsAndBiases()
+    {
         bias = RandomnessHandler.RandomMinMax(-5, 5);
         foreach (var node in CorrectWeights.Keys) weights[node] = RandomnessHandler.RandomMinMax(-5, 5);
     }

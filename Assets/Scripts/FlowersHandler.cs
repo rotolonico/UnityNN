@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlowerSpawner : MonoBehaviour
+public class FlowersHandler : MonoBehaviour
 {
-    public static FlowerSpawner Instance;
+    public static FlowersHandler Instance;
     
     public Transform flowerContainer;
     public Transform redFlower;
@@ -23,5 +23,17 @@ public class FlowerSpawner : MonoBehaviour
     {
         var newBlueFlower = Instantiate(blueFlower, position, Quaternion.identity);
         newBlueFlower.SetParent(flowerContainer, true);
+    }
+
+    public void RemoveFlower(Vector3 mousePosition)
+    {
+        var flower = Physics2D.OverlapCircle(mousePosition, 0.01f);
+        if (flower != null && (flower.CompareTag("RedFlower") || flower.CompareTag("BlueFlower"))) Destroy(flower.gameObject);
+    }
+
+    public void ClearFlowers()
+    {
+        foreach (var flower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(flower);
+        foreach (var flower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(flower);
     }
 }

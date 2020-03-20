@@ -94,7 +94,7 @@
           <e p="BasicFunctions.cs" t="Include" />
           <e p="CameraController.cs" t="Include" />
           <e p="Chunk.cs" t="Include" />
-          <e p="FlowerSpawner.cs" t="Include" />
+          <e p="FlowersHandler.cs" t="Include" />
           <e p="FrameRateLimiter.cs" t="Include" />
           <e p="FunctionGrapher.cs" t="Include" />
           <e p="InputUIBlocker.cs" t="Include" />
