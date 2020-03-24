@@ -225,7 +225,6 @@ MonoBehaviour:
   constantLearning: {fileID: 750541341}
   customColors: {fileID: 1398459330}
   stuckButton: {fileID: 0}
-  clearButton: {fileID: 0}
   customColor1: {r: 1, g: 0, b: 0, a: 1}
   customColor2: {r: 0, g: 0.101790905, b: 1, a: 1}
 --- !u!114 &48466348
@@ -8686,9 +8685,9 @@ RectTransform:
   m_Father: {fileID: 1014061795}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 971, y: -326}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -30, y: 100}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1975635509
