@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public static class NetworkCalculator
@@ -19,7 +21,7 @@ public static class NetworkCalculator
 
         for (var i = 0; i < network.Layers[network.Layers.Length - 1].Nodes.Length; i++)
             outputs[i] = network.Layers[network.Layers.Length - 1].Nodes[i].CalculateValue();
-        
+
         foreach (var layer in network.Layers)
         foreach (var node in layer.Nodes)
             node.ValueCalculated = false;
@@ -29,15 +31,16 @@ public static class NetworkCalculator
 
     public static void TrainNetwork(NeuralNetwork network, List<float[]> inputs, List<float[]> desiredOutputs)
     {
-        foreach (var desiredOutput in desiredOutputs.Where(desiredOutput => network.Structure[network.Structure.Length - 1] != desiredOutput.Length))
+        foreach (var desiredOutput in desiredOutputs.Where(desiredOutput =>
+            network.Structure[network.Structure.Length - 1] != desiredOutput.Length))
         {
             Debug.Log("Expected " + network.Structure[network.Structure.Length - 1] + " outputs, got " +
                       desiredOutput.Length);
             return;
         }
-        
+
         var doneTraining = true;
-        
+
         for (var i = 0; i < inputs.Count; i++)
         {
             var input = inputs[i];
@@ -50,16 +53,18 @@ public static class NetworkCalculator
             {
                 foreach (var node in network.Layers[j].Nodes)
                 {
-                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) * network.ClassificationOverPrecision * node.CalculateCostDelta(network.ClassificationOverPrecision, network.MaxError);
+                    var biasSmudge = BasicFunctions.SigmoidDerivative(node.Value) *
+                                     network.ClassificationOverPrecision *
+                                     node.CalculateCostDelta(network.ClassificationOverPrecision, network.MaxError);
                     node.TrainingBiasSmudge += biasSmudge;
-                    
+
                     if (!node.isAcceptableValue) doneTraining = false;
 
                     foreach (var connectedNode in node.GetConnectedNodes())
                     {
                         var weightSmudge = connectedNode.Value * biasSmudge;
                         node.TrainingWeightsSmudge[connectedNode] += weightSmudge;
-                        
+
                         var valueSmudge = node.GetWeight(connectedNode) * biasSmudge;
                         connectedNode.SmudgeDesiredValue(valueSmudge);
                     }
@@ -70,7 +75,6 @@ public static class NetworkCalculator
         if (doneTraining)
         {
             network.Done = true;
-            Debug.Log("Done!");
             return;
         }
 
@@ -86,7 +90,7 @@ public static class NetworkCalculator
                 {
                     node.SmudgeWeight(connectedNode, node.TrainingWeightsSmudge[connectedNode]);
                     node.TrainingWeightsSmudge[connectedNode] *= network.Momentum;
-                    
+
                     node.SetWeight(connectedNode, node.GetWeight(connectedNode) * (1 - network.WeightDecay));
                 }
 
@@ -106,11 +110,30 @@ public static class NetworkCalculator
 
                 var nodes = node.GetConnectedNodes();
                 foreach (var connectedNode in nodes)
-                {    
+                {
                     var nodeWeight = node.GetWeight(connectedNode);
-                    node.SetWeight(connectedNode, nodeWeight + (node.CorrectWeights[connectedNode] - nodeWeight) * speed);
+                    node.SetWeight(connectedNode,
+                        nodeWeight + (node.CorrectWeights[connectedNode] - nodeWeight) * speed);
                 }
             }
         }
+    }
+
+    public static float CalculateNetworkAccuracy(NeuralNetwork network, List<float[]> inputs,
+        List<float[]> desiredOutputs, bool absolute)
+    {
+        var accuracies = new List<float>();
+        for (var i = 0; i < inputs.Count; i++)
+        {
+            var input = inputs[i];
+            var output = TestNetwork(network, input).ToList();
+            var desiredOutput = desiredOutputs[i].ToList();
+            
+            if (!absolute) accuracies.AddRange(output.Select((t, j) => 1 - Mathf.Abs(desiredOutput[j] - t)));
+            else
+                accuracies.Add(output.IndexOf(output.Max()) == desiredOutput.IndexOf(desiredOutput.Max()) ? 1 : 0);
+        }
+
+        return accuracies.Average();
     }
 }

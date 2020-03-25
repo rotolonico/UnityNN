@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class UIHandler : MonoBehaviour
     public bool allowPlacing;
 
     public Slider networkStructureSlider;
-    public Slider trainingIterations;
+    public Slider trainingIterationsSlider;
     public TMP_InputField saveNameIF;
     public Slider graphDetailSlider;
     public Slider graphSpacingSlider;
@@ -26,22 +27,35 @@ public class UIHandler : MonoBehaviour
     public Toggle dynamicColors;
     public Toggle constantLearning;
     public Toggle customColors;
+    public TextMeshProUGUI trainingIterationsText;
+    public TextMeshProUGUI networkStructureText;
 
-    public GameObject stuckButton;
+    public Button stuckButton;
+    public TextMeshProUGUI stuckButtonText;
 
     public Color customColor1;
     public Color customColor2;
+
+    public Color weightSliderColor;
+    public Color weightFillSliderColor;
+    public Color biasSliderColor;
+    public Color biasFillSliderColor;
 
     private NeuralNetwork network;
     private GameObject[] currentRedFlowers;
     private GameObject[] currentBlueFlowers;
     private bool calculatedFlowers;
+    private bool clearingFlowers;
+
+    public GameObject accuracyPanel;
+    public TextMeshProUGUI accuracyText;
+    public TextMeshProUGUI absAccuracyText;
 
     private void Start()
     {
         Instance = this;
         CameraController.Instance.isActive = allowMovement;
-        network = new NeuralNetwork(new[] {2, 3, 2});
+        network = new NeuralNetwork(new[] {2, (int) networkStructureSlider.value, 2});
         NetworkDisplayer.Instance.DisplayNetwork(network);
         GraphNetwork();
 
@@ -51,6 +65,8 @@ public class UIHandler : MonoBehaviour
         UpdateMomentum();
         UpdateClassificationOverPrecision();
         UpdateMaxError();
+
+        if (!allowPlacing) LoadNetworkFromResources("1");
     }
 
     public void UpdateDetail() => FunctionGrapher.Instance.graphDetail = (int) graphDetailSlider.value;
@@ -68,6 +84,16 @@ public class UIHandler : MonoBehaviour
     {
         network.MaxError = maxErrorSlider.value;
         network.Done = false;
+    }
+
+    public void UpdateNetworkSpeed() => trainingIterationsText.text =
+        "Speed: " + trainingIterationsSlider.value.ToString(CultureInfo.InvariantCulture);
+
+    public void UpdateNetworkStructure()
+    {
+        networkStructureText.text =
+            "Hidden Layers: " + networkStructureSlider.value.ToString(CultureInfo.InvariantCulture);
+        ChangeNetwork();
     }
 
     private void Update()
@@ -105,6 +131,7 @@ public class UIHandler : MonoBehaviour
     {
         FlowersHandler.Instance.ClearFlowers();
         calculatedFlowers = false;
+        clearingFlowers = true;
     }
 
     private Vector3 GetWorldMousePosition()
@@ -135,7 +162,7 @@ public class UIHandler : MonoBehaviour
 
     public void TrainNetwork()
     {
-        var iterations = trainingIterations.value;
+        var iterations = trainingIterationsSlider.value;
         var inputsOutputs = GetInputsOutputs();
 
         for (var i = 0; i < iterations; i++)
@@ -158,7 +185,7 @@ public class UIHandler : MonoBehaviour
     {
         var redFlowers = calculatedFlowers ? currentRedFlowers : GameObject.FindGameObjectsWithTag("RedFlower");
         var blueFlowers = calculatedFlowers ? currentBlueFlowers : GameObject.FindGameObjectsWithTag("BlueFlower");
-        if (!calculatedFlowers)
+        if (!calculatedFlowers && !clearingFlowers)
         {
             currentRedFlowers = redFlowers;
             currentBlueFlowers = blueFlowers;
@@ -213,14 +240,37 @@ public class UIHandler : MonoBehaviour
         ImplementNetwork(networkSave);
     }
 
-    public void LoadNetworkFromResources(string networkName)
+    public void GoToLevel(string levelName)
     {
+        var inputsOutputs = GetInputsOutputs();
+        var absAccuracy =
+            NetworkCalculator.CalculateNetworkAccuracy(network, inputsOutputs.Key, inputsOutputs.Value, true);
+        OpenAccuracyPanel(
+            NetworkCalculator.CalculateNetworkAccuracy(network, inputsOutputs.Key, inputsOutputs.Value, false),
+            (int) (inputsOutputs.Key.Count * absAccuracy), inputsOutputs.Key.Count);
+        LoadNetworkFromResources(levelName);
+    }
+
+    private void OpenAccuracyPanel(float accuracy, int correctFlowers, int totalFlowers)
+    {
+        accuracyPanel.SetActive(true);
+        absAccuracyText.text = "Flowers found: " + correctFlowers + "/" + totalFlowers;
+        accuracyText.text = "Accuracy: " + Math.Round(accuracy * 100f) + "%";
+    }
+
+    public void CloseAccuracyPanel() => accuracyPanel.SetActive(false);
+
+    private void LoadNetworkFromResources(string networkName)
+    {
+        calculatedFlowers = false;
+        
         var networkSaveJson = Resources.Load<TextAsset>($"{networkName}").text;
         var networkSave = NetworkStorage.LoadNetworkFromJSON(networkSaveJson);
         ImplementNetwork(networkSave);
 
         StopAllCoroutines();
-        stuckButton.SetActive(true);
+        stuckButton.interactable = true;
+        stuckButtonText.text = "Stuck?";
     }
 
     private void ImplementNetwork(NetworkSave networkSave)
@@ -237,6 +287,14 @@ public class UIHandler : MonoBehaviour
         for (var i = network.Layers.Length - 1; i >= 1; i--)
             foreach (var node in network.Layers[i].Nodes)
                 node.RandomizeWeightsAndBiases();
+
+        while (Math.Abs(NetworkCalculator.CalculateNetworkAccuracy(network, networkSave.inputsOutputs.Key,
+                            networkSave.inputsOutputs.Value, true) - 1) < 0.01f)
+        {
+            for (var i = network.Layers.Length - 1; i >= 1; i--)
+                foreach (var node in network.Layers[i].Nodes)
+                    node.RandomizeWeightsAndBiases();
+        }
 
         foreach (var redFlower in GameObject.FindGameObjectsWithTag("RedFlower")) Destroy(redFlower);
         foreach (var blueFlower in GameObject.FindGameObjectsWithTag("BlueFlower")) Destroy(blueFlower);
@@ -287,7 +345,7 @@ public class UIHandler : MonoBehaviour
 
     private IEnumerator GetHintCoroutine()
     {
-        stuckButton.SetActive(false);
+        stuckButton.interactable = false;
 
         for (var i = 0; i < 50; i++)
         {
@@ -297,8 +355,14 @@ public class UIHandler : MonoBehaviour
             GraphNetwork();
         }
 
-        yield return new WaitForSecondsRealtime(30);
-        stuckButton.SetActive(true);
+        for (int i = 0; i < 30; i++)
+        {
+            stuckButtonText.text = "Stuck? " + (30 - i);
+            yield return new WaitForSecondsRealtime(1);
+        }
+
+        stuckButton.interactable = true;
+        stuckButtonText.text = "Stuck?";
     }
 
     public void GoToDemo1() => SceneManager.LoadScene(0);

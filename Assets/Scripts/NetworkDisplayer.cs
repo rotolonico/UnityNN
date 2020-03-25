@@ -92,7 +92,13 @@ public class NetworkDisplayer : MonoBehaviour
     {
         var newSlider = Instantiate(slider, transform.position, Quaternion.identity);
         newSlider.SetParent(sliderContainer, false);
-        newSlider.GetComponentInChildren<TextMeshProUGUI>().text = label;
+        if (!UIHandler.Instance.allowPlacing) newSlider.GetComponentInChildren<TextMeshProUGUI>().text = label;
+        else
+        {
+            var sliderChild = newSlider.GetChild(0);
+            sliderChild.GetChild(0).GetComponent<Image>().color = label[0] == 'w' ? UIHandler.Instance.weightSliderColor : UIHandler.Instance.biasSliderColor;
+            sliderChild.GetChild(1).GetChild(0).GetComponent<Image>().color = label[0] == 'w' ? UIHandler.Instance.weightFillSliderColor : UIHandler.Instance.biasFillSliderColor;
+        }
         return newSlider;
     }
 }

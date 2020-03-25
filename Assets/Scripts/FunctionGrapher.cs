@@ -71,7 +71,7 @@ public class FunctionGrapher : MonoBehaviour
     private void Update()
     {
         detailFunctionDelay += Mathf.Min(Time.deltaTime, 0.09f);
-        if (!detailFunction || !(detailFunctionDelay > 0.1f)) return;
+        if (!detailFunction || !(detailFunctionDelay > 0.1f) || Input.GetMouseButton(0)) return;
         detailFunction = false;
         if (!UIHandler.Instance.customColors.isOn) StartCoroutine(DetailCurrentFunction());
     }

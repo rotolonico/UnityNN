@@ -213,7 +213,7 @@ MonoBehaviour:
   allowMovement: 1
   allowPlacing: 1
   networkStructureSlider: {fileID: 157282695}
-  trainingIterations: {fileID: 1814256748}
+  trainingIterationsSlider: {fileID: 1814256748}
   saveNameIF: {fileID: 1019494811}
   graphDetailSlider: {fileID: 859754839}
   graphSpacingSlider: {fileID: 1478140274}
@@ -224,9 +224,19 @@ MonoBehaviour:
   dynamicColors: {fileID: 485777737}
   constantLearning: {fileID: 750541341}
   customColors: {fileID: 1398459330}
-  useANNLibrary: {fileID: 630660521}
+  trainingIterationsText: {fileID: 1795326028}
+  networkStructureText: {fileID: 1489812274}
+  stuckButton: {fileID: 0}
+  stuckButtonText: {fileID: 0}
   customColor1: {r: 1, g: 0, b: 0, a: 1}
   customColor2: {r: 0, g: 0.101790905, b: 1, a: 1}
+  weightSliderColor: {r: 0, g: 0, b: 0, a: 0}
+  weightFillSliderColor: {r: 0, g: 0, b: 0, a: 0}
+  biasSliderColor: {r: 0, g: 0, b: 0, a: 0}
+  biasFillSliderColor: {r: 0, g: 0, b: 0, a: 0}
+  accuracyPanel: {fileID: 0}
+  accuracyText: {fileID: 0}
+  absAccuracyText: {fileID: 0}
 --- !u!114 &48466348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3947,7 +3957,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4345,12 +4355,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1600, y: 900}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
